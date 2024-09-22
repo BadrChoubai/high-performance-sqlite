@@ -10,5 +10,3 @@ High Performance SQLite [Course Website](https://highperformancesqlite.com/)
 1. [Introduction](./1-introduction/README.md)
 2. [SQLite Internals](./2-sqlite-internals/README.md)
 3. [Schema](./3-schema/README.md)
-
-

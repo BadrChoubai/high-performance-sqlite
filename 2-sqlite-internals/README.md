@@ -1,8 +1,8 @@
 # SQLite Internals
 
-![internals diagram](../.attachments/sqlite-internals-diagram.png)
+![internals diagram](../docs/assets/sqlite-internals-diagram.png)
 
-## SQLite's File Format
+## SQLite File Format
 
 A SQLite database is a single file and inside of this file you'll see equal sized
 chunks of data called "Pages". The size of these pages is configurable from `512 bytes`
@@ -11,7 +11,7 @@ dedicated to managing locks.
 
 ## Dot Commands
 
-Inside of the SQLite command-line there are commands you can use:
+Inside the SQLite command-line there are commands you can use:
 
 - `.help` is a dot command which will bring up all of the available commands
 - `.mode` select between output modes for queries (json, csv, md, insert)
