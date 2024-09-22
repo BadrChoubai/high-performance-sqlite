@@ -217,7 +217,7 @@ create table products (
     price_after_tax real generated always as (price + (price * tax_rate)) STORED
 );
 
-insert into products (name, price, tax_rate) values ('High Performance SQLite', 179.99, 0.01);
+insert into products (name, price, tax_rate) values ('High Performance SQLite', 179.99, 0.0);
 select name, price - (price * 0.30), price_after_tax from products;
 
 drop table products;
