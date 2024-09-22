@@ -178,21 +178,48 @@ drop table example_no_rowid;
 
 ## Generated Columns
 
+There are two types of generate columns:
+
+1. Virtual (calc. at runtime)
+2. Stored (calc. once) - written to disk as if it were a regular column
+
+**The value inside a generated column _must_ be deterministic.**
+
+### Example of Virtual Generated Column 
+
 ```sqlite
-create table gen (
+create table people (
     id integer primary key,
     first_name text,
     last_name text,
     full_name generated always as (concat(first_name, ' ', last_name))
 );
 
-insert into gen (first_name, last_name) values ('badr', 'choubai');
-select * from gen;
+insert into people (first_name, last_name) values ('badr', 'choubai');
+select * from people;
+
+drop table people
 ```
 
-| id | first\_name | last\_name | full\_name |
-| :--- | :--- | :--- | :--- |
-| 1 | badr | choubai | badr choubai |
+| id | first\_name | last\_name | full\_name   |
+|:---|:------------|:-----------|:-------------|
+| 1  | badr        | choubai    | badr choubai |
 
 
+### Example of Stored Generated Column 
+
+```sqlite
+create table products (
+    id integer primary key,
+    name text,
+    price real,
+    tax_rate real,
+    price_after_tax real generated always as (price + (price * tax_rate)) STORED
+);
+
+insert into products (name, price, tax_rate) values ('High Performance SQLite', 179.99, 0.01);
+select name, price - (price * 0.30), price_after_tax from products;
+
+drop table products;
+```
 
