@@ -12,14 +12,12 @@ command: `which sqlite3`.
 
 - [Install on Ubuntu](#Installing-SQLite-on-Ubuntu)
 
-
 ## Good uses for SQLite
 
 1. Embedded Applications
 2. Web Applications
 3. Making application data portable
 4. As a file format for application data
-
 
 ## Limitations of SQLite
 

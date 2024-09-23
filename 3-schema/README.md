@@ -40,7 +40,7 @@ insert into strict_types values ('qwerty', 1);
 --Runtime error: cannot store TEXT value in INTEGER column strict_types.int (19)
 ```
 
-### Mixing types 
+### Mixing types
 
 ```sqlite
 create table kv (key text, value any) strict;
@@ -53,11 +53,11 @@ drop table kv;
 
 ## Dates in SQLite
 
-There are no built-in type for `Dates`, it does have built-in functions which work 
-on values stored as valid dates. 
+There are no built-in type for `Dates`, it does have built-in functions which work
+on values stored as valid dates.
 
-Three ways you might store a Date value in SQLite include: TEXT (ISO 8601), 
-REAL (JDN), INTEGER (UNIX TIMESTAMP). No matter which way of these three you 
+Three ways you might store a Date value in SQLite include: TEXT (ISO 8601),
+REAL (JDN), INTEGER (UNIX TIMESTAMP). No matter which way of these three you
 choose they will work with SQLite's built-in date functions.
 
 ```sqlite3
@@ -90,7 +90,7 @@ In SQLite, REAL is the datatype that stores floating point numbers.
 
 ```sqlite
 create table floats (val float);
--- 'float': based on the affinity rules means the value is stored as REAL 
+-- 'float': based on the affinity rules means the value is stored as REAL
 insert into floats values (3.14), (-11.26), (0.0314);
 
 
@@ -154,11 +154,10 @@ select rowid, * from example_id;
 drop table example_id;
 ```
 
-| id | id |
-| :--- | :--- |
-| 1 | 1 |
-| 2 | 2 |
-
+| id  | id  |
+| :-- | :-- |
+| 1   | 1   |
+| 2   | 2   |
 
 ### WITHOUT ROWID tables
 
@@ -185,7 +184,7 @@ There are two types of generate columns:
 
 **The value inside a generated column _must_ be deterministic.**
 
-### Example of Virtual Generated Column 
+### Example of Virtual Generated Column
 
 ```sqlite
 create table people (
@@ -201,12 +200,11 @@ select * from people;
 drop table people
 ```
 
-| id | first\_name | last\_name | full\_name   |
-|:---|:------------|:-----------|:-------------|
-| 1  | badr        | choubai    | badr choubai |
+| id  | first_name | last_name | full_name    |
+| :-- | :--------- | :-------- | :----------- |
+| 1   | badr       | choubai   | badr choubai |
 
-
-### Example of Stored Generated Column 
+### Example of Stored Generated Column
 
 ```sqlite
 create table products (
@@ -222,4 +220,3 @@ select name, price - (price * 0.30), price_after_tax from products;
 
 drop table products;
 ```
-
