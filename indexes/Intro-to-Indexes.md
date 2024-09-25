@@ -247,6 +247,56 @@ For example, in our composite index `multi(first_name, last_name, birthday)`, if
 `first_name` and `last_name`, placing those columns at the beginning of the index is optimal. If you frequently perform
 range scans on `birthday`, it should come last in the index.
 
+## Index Obfuscation
+
+One of the most important rules for writing good, performant queries is to _use the indexes you've created_. This may
+seem obvious, but you can still unknowingly _obfuscate_ an index, which makes SQLite unable to use it. This happens when
+you hide your indexed column under a transformation that SQLite can’t recognize, essentially making the index invisible.
+
+For example, consider the query:
+
+```sqlite
+EXPLAIN QUERY PLAN
+SELECT *
+FROM users
+WHERE strftime('%Y', birthday) = '1989'
+LIMIT 20;
+```
+
+The query executes correctly, but you might see the result:
+
+| detail     |
+|:-----------|
+| SCAN users |
+
+Despite having an index on `birthday`, this query performs a full table scan. Why? Because the index is on `birthday`,
+but the query is comparing a transformed version of it (`strftime('%Y', birthday)`), which isn’t indexed. SQLite sees
+this as a completely new expression and doesn’t know how to use the existing index.
+
+To _un-obfuscate_ the index, you need to rewrite the query so that the indexed column remains intact:
+
+```sqlite
+EXPLAIN QUERY PLAN
+SELECT *
+FROM users
+WHERE birthday BETWEEN '1989-01-01' AND '1989-12-31'
+LIMIT 20;
+```
+
+Now, the query output shows:
+
+| detail                                                            |
+|:------------------------------------------------------------------|
+| SEARCH users USING INDEX bday \(birthday&gt;? AND birthday&lt;?\) |
+
+This is what you want! The query is now using the index on `birthday` called `bday`.
+
+The key takeaway here is to avoid hiding your indexed columns behind transformations like date math, concatenations, or
+other operations. Instead, move these operations to the other side of the operand, ensuring that the indexed column
+remains untouched.
+
+In summary, **rule number one** for writing good queries: _Use your indexes by not obfuscating them_!## Joins
+
 #### Conclusion
 
 Using composite indexes effectively can dramatically improve query performance in SQLite. However, it’s crucial to
