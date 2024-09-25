@@ -1,7 +1,5 @@
 # Other Types of Indexes
 
-Here’s the summary for "Other Types of Indexes":
-
 Indexes in SQLite are powerful tools for optimizing queries. Beyond standard indexes, there are several specialized
 types that can be particularly useful:
 

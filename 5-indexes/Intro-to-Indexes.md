@@ -7,7 +7,7 @@ When designing your database schema, start by analyzing your data and deriving t
 indexes, consider the following questions: What queries are you running? How are you accessing the data? Answering these
 questions will help guide the design of your indexes.
 
-### Users Table
+## Our Users Table
 
 I've imported a partial version of the full size course database containing users.
 
