@@ -18,6 +18,9 @@
 In essence, effective indexing depends on understanding how the data will be queried,
 ensuring optimal performance based on those access patterns.
 
+[Creating and Using Indexes](./Intro-to-Indexes)
+[Other Types of Indexes](./Other-types-of-Indexes.md)
+
 ## B Trees
 
 B Trees are the underlying data structure which makes indexing affective, performant, and powerful. They are
@@ -43,31 +46,31 @@ how a traversal might look, given the simplified B-tree structure previously def
 
 1. **Start at the root:**
 
-    - Compare "lyons" with "aurora"
-    - "lyons" is greater than "aurora"
-    - Move to the right child (boulder and denver)
+   - Compare "lyons" with "aurora"
+   - "lyons" is greater than "aurora"
+   - Move to the right child (boulder and denver)
 
 2. **Next node (Boulder):**
 
-    - Compare "lyons" with "boulder"
-    - "Lyons" is greater than "boulder"
-    - move to the right child (denver)
+   - Compare "lyons" with "boulder"
+   - "Lyons" is greater than "boulder"
+   - move to the right child (denver)
 
 3. **Next node (Denver):**
 
-    - Compare "lyons" with "denver"
-    - "lyons" is greater than "denver"
-    - move to the right child (hudson and lyons)
+   - Compare "lyons" with "denver"
+   - "lyons" is greater than "denver"
+   - move to the right child (hudson and lyons)
 
 4. **Next node (Hudson):**
 
-    - Compare "lyons" with "hudson"
-    - "lyons" is greater than "hudson"
-    - move to the right child (lyons)
+   - Compare "lyons" with "hudson"
+   - "lyons" is greater than "hudson"
+   - move to the right child (lyons)
 
 5. **Next node (Lyons):**
-    - Compare "lyons" with "lyons"
-    - Found "lyons"!
+   - Compare "lyons" with "lyons"
+   - Found "lyons"!
 
 ## Primary, Secondary, and Clustered Indexes
 
@@ -105,12 +108,13 @@ how a traversal might look, given the simplified B-tree structure previously def
    integer, avoids such issues.
 
 3. **Performance Tradeoffs**:
-    - **Insert Penalty**: Using a random key as a primary key in a WITHOUT ROWID table can result in an insert penalty.
-      The B-tree may need to re-balance often, which can slow down insertions.
-    - **Read Benefit**: Without the row ID, a significant benefit is that you avoid the second lookup. With regular row
-      ID tables, if the primary key is not an alias for the row ID, two lookups are necessary—one for the primary key,
-      and another for the row ID in the clustered index. In WITHOUT ROWID tables, querying by the primary key provides
-      direct access to the row data, potentially improving read performance.
+
+   - **Insert Penalty**: Using a random key as a primary key in a WITHOUT ROWID table can result in an insert penalty.
+     The B-tree may need to re-balance often, which can slow down insertions.
+   - **Read Benefit**: Without the row ID, a significant benefit is that you avoid the second lookup. With regular row
+     ID tables, if the primary key is not an alias for the row ID, two lookups are necessary—one for the primary key,
+     and another for the row ID in the clustered index. In WITHOUT ROWID tables, querying by the primary key provides
+     direct access to the row data, potentially improving read performance.
 
 4. **Example Scenario**: In a key-value store where the key is the primary key, a WITHOUT ROWID table would arrange the
    data on disk based on the key. The tradeoff to consider is whether the faster reads (due to skipping the second
