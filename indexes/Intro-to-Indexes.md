@@ -1,8 +1,5 @@
 # How to Use Indexes in SQLite
 
-[//]: # (TODO: Add Downloadable Demo Database)
-[//]: # ([Demo Database Download]&#40;&#41;Download)
-
 When designing your database schema, start by analyzing your data and deriving the schema from it. When designing your
 indexes, consider the following questions: What queries are you running? How are you accessing the data? Answering these
 questions will help guide the design of your indexes.
