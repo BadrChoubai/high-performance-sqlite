@@ -1,16 +1,104 @@
-# Summary
+# High Performance SQLite Course Notes
 
-Notes and other artifacts created while working through the High Performance SQLite
-course.
-
-High Performance SQLite [Course Website](https://highperformancesqlite.com/)
+This project contains source code, artifacts, and written notes created while learning the foundations of SQL and
+SQLite.
 
 ## Chapters
 
-1. [Introduction](./1-introduction/README.md)
-2. [SQLite Internals](./2-sqlite-internals/README.md)
-3. [Schema](./3-schema/README.md)
-4. [Optimizing SQLite](./4-optimizing-sqlite/README.md)
-5. [Indexes](./5-indexes/README.md)
-   - [Creating and Using Indexes](./5-indexes/Intro-to-Indexes)
-   - [Other Types of Indexes](./5-indexes/Other-types-of-Indexes.md)
+1. [SQLite Internals](./sqlite-internals/README.md)
+2. [Schema](./schema/README.md)
+3. [Optimizing SQLite](./optimizing-sqlite/README.md)
+4. [Indexes](./indexes/README.md)
+    - [Creating and Using Indexes](./indexes/Intro-to-Indexes)
+    - [Other Types of Indexes](./indexes/Other-types-of-Indexes.md)
+
+---
+
+## Introduction to SQLite
+
+SQLite is a lightweight, serverless, self-contained database management system.
+Unlike most databases (e.g., Postgres, MySQL), SQLite doesn’t require a separate server; it’s an embedded database
+that stores everything in a single file.
+
+### Features of SQLite:
+
+- **Serverless**: No need for a separate server process. The database is just a file that your application accesses
+  directly.
+  Zero Configuration: No installation or setup is required. You just include the SQLite library in your project and
+  start
+  working.
+- **Lightweight**: It's small, fast to set up, and designed for small to medium applications like mobile apps or
+  embedded systems.
+
+### Use Cases:
+
+- **Single-user applications**: Ideal for desktop or mobile apps where there’s only one user or minimal data.
+  Embedded systems: Great for small devices or applications with limited resources.
+- **Prototyping**: Excellent for quick prototypes or proof-of-concept projects due to its ease of setup.
+
+### Limitations:
+
+- **Limited concurrency**: Only one write operation can happen at a time, making it less suitable for high-traffic,
+  multi-user
+  applications.
+- **Not built for large-scale, high-performance systems**: It’s perfect for smaller projects but not for
+  enterprise-level applications that require robust transaction handling and scalability.
+
+    > ### SQLite Security Considerations:
+    >
+    > - **No Built-In User Authentication**: Unlike larger database systems like PostgreSQL or MySQL, SQLite doesn’t have a
+        concept of users or roles with specific permissions. There’s no fine-grained access control—anyone with access to
+        the database file can read and write to it.
+    > - **File-Based Security**: Since SQLite stores data in a single file, securing the database depends largely on the
+        file system permissions. You should ensure that only trusted users or processes can read or modify the database
+        file.
+    > - **Encryption**: SQLite doesn’t provide encryption by default, but you can use external libraries, like SQLite
+        Encryption Extension (SEE) or SQLCipher, to encrypt the database file. This is critical if the file might be stored
+        on untrusted devices or environments (e.g., in mobile apps).
+    > - **Data Integrity**: Even though it doesn’t have fine-grained access controls, SQLite still provides security for
+        data integrity with ACID-compliant transactions and journaling to prevent corruption.
+
+### Comparison to other Technologies:
+
+- SQLite is file-based and serverless, while Postgres is a more complex, full-featured, client-server database
+  designed
+  for larger, scalable applications.
+- SQLite is simpler but has limitations in handling concurrency and large-scale workloads, while PostgreSQL excels in
+  those areas.
+
+[Wikipedia Page for Further Reading](https://en.wikipedia.org/wiki/SQLite)
+
+## Running SQLite
+
+Many OSes come with SQLite already installed, but you may choose to use a version
+installed by your package manager. To check if it is installed run the following
+command: `which sqlite3`
+
+- [Install on Ubuntu](#Installing-SQLite-on-Ubuntu)
+
+### Installing SQLite on Ubuntu
+
+To install SQLite on Ubuntu run the following commands:
+
+1. Update your package list
+
+   ```bash
+   sudo apt update
+   ```
+
+2. Install the `sqlite3` package
+
+   ```bash
+   sudo apt install sqlite3 
+   ```
+
+3. Verify your install with `sqlite3 --version`
+
+   ```bash
+   sqlite3 --version
+   ```
+
+#### Resources
+
+- [High Performance SQLite](https://highperformancesqlite.com/)
+- [SQLite Documentation](https://www.sqlite.org/docs.html)
