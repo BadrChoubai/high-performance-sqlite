@@ -30,13 +30,13 @@ Running `playground_up.sql` inside of Datagrip should create a table which would
 
 ![B Tree](../docs/assets/b-tree.png)
 
-In the above tree structure we are looking at:
+### In the above tree structure we are looking at:
 
-1. Nodes: B-trees consist of internal nodes and leaf nodes, where internal nodes contain keys and pointers to child
+1. **Nodes**: B-trees consist of internal nodes and leaf nodes, where internal nodes contain keys and pointers to child
    nodes,
    while leaf nodes contain keys and hold the actual data.
-2. Keys: The keys stored in the nodes are kept in sorted order and act as separators to guide search operations.
-3. Child Pointers: Each internal node has pointers to child nodes, with the number of child pointers always being one
+2. **Keys**: The keys stored in the nodes are kept in sorted order and act as separators to guide search operations.
+3. **Child Pointers**: Each internal node has pointers to child nodes, with the number of child pointers always being one
    more than the number of keys, facilitating traversal through the tree.
 
 ### Traversing The Tree
@@ -45,28 +45,28 @@ For the query `SELECT * FROM cities WHERE name = 'lyons'`, the tree is traversed
 how a traversal might look, given the simplified B-tree structure previously defined:
 
 1. **Start at the root:**
-
+2. 
    - Compare "lyons" with "aurora"
-   - "lyons" is greater than "aurora"
-   - Move to the right child (boulder and denver)
+      - "lyons" is greater than "aurora"
+      - Move to the right child (boulder and denver)
 
 2. **Next node (Boulder):**
 
    - Compare "lyons" with "boulder"
-   - "Lyons" is greater than "boulder"
-   - move to the right child (denver)
+      - "Lyons" is greater than "boulder"
+      - move to the right child (denver)
 
 3. **Next node (Denver):**
 
    - Compare "lyons" with "denver"
-   - "lyons" is greater than "denver"
-   - move to the right child (hudson and lyons)
+      - "lyons" is greater than "denver"
+      - move to the right child (hudson and lyons)
 
 4. **Next node (Hudson):**
 
    - Compare "lyons" with "hudson"
-   - "lyons" is greater than "hudson"
-   - move to the right child (lyons)
+      - "lyons" is greater than "hudson"
+      - move to the right child (lyons)
 
 5. **Next node (Lyons):**
    - Compare "lyons" with "lyons"

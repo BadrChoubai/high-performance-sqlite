@@ -330,9 +330,8 @@ the second index can perform the same role as the first, making the first index 
 >
 > When you have two indexes with the same leftmost prefix, SQLite’s query planner can use either index to run a query
 > based on the leftmost column (in this case, `email`). The index with more columns can still serve queries that only
-> involve `email`.
->
-> For instance:
+> involve `email`. For instance:
+> 
 > ```sqlite
 > SELECT *
 > FROM users
@@ -404,7 +403,7 @@ To avoid this, you might decide to keep the simpler `email_index` for cases wher
 > don’t provide any additional query optimization and only consume extra disk space. However, you may want to keep an
 > index if you rely on the hidden row ID for sorting, as discussed.
 
-### Summary:
+#### Summary:
 
 - **Duplicate Indexes**: Indexes that share the same leftmost prefix (e.g., `email` in both `email_index` and
   `email_is_pro_index`) are typically redundant, and you can usually remove the one with fewer columns.
