@@ -18,8 +18,8 @@
 In essence, effective indexing depends on understanding how the data will be queried,
 ensuring optimal performance based on those access patterns.
 
-[Creating and Using Indexes](./Intro-to-Indexes)
-[Other Types of Indexes](./Other-types-of-Indexes.md)
+- [Creating and Using Indexes](./Intro-to-Indexes.md)
+- [Other Types of Indexes](./Other-types-of-Indexes.md)
 
 ## B Trees
 
