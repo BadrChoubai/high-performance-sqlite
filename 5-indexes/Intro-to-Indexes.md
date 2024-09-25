@@ -209,8 +209,6 @@ the rule of left-to-right usage without skipping any columns.
 
 ### Rules for Using Composite Indexes
 
-As described in the transcript, there are two essential rules for using composite indexes:
-
 1. **Left-to-right, no skipping**: The database must use the index in the order it was created. In our example, if a
    query includes `first_name`, SQLite can use the index, but it cannot skip `first_name` and directly use `last_name`
    or `birthday`.
@@ -239,8 +237,10 @@ range condition is encountered, the index cannot be used for subsequent columns.
 
 ### Optimizing Query Performance with Composite Indexes
 
-The transcript emphasizes a key insight: **common equality conditions should be at the beginning of a composite index**,
-while **range conditions should be at the end**. This strategy allows the index to satisfy as many equality conditions
+> **Common equality conditions should be at the beginning of a composite index**,
+while **range conditions should be at the end**.
+ 
+This strategy allows the index to satisfy as many equality conditions
 as possible before encountering a range condition that halts further index usage.
 
 For example, in our composite index `multi(first_name, last_name, birthday)`, if most of your queries filter by

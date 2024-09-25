@@ -295,10 +295,6 @@ based on email domains or specific JSON keys, expression indexes can significant
 
 ---
 
-Here’s an expanded explanation, incorporating the concept of **duplicate indexes** from the transcript:
-
----
-
 ## Understanding Duplicate Indexes in SQLite
 
 When creating indexes in SQLite, there are some important performance and efficiency considerations related to how
