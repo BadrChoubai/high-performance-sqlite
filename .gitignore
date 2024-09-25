@@ -12,6 +12,8 @@
 !/.idea
 
 !/docs/*/**
-!*.md
+!README.md
+!*/*.md
+
 # ...even if they are in subdirectories
 !*/

@@ -399,6 +399,8 @@ serves as a useful one-off solution when you need to access archived data.
 Common Table Expressions (CTEs) are a powerful way to logically and structurally organize your SQL queries. They can
 improve readability and maintainability, and they might also provide performance benefits.
 
+> Notes on [Recursive CTEs](./Recursive-CTEs.md)
+ 
 ### Example Query Using `UNION ALL`:
 
 ```sqlite

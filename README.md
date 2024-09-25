@@ -24,6 +24,7 @@ The course has a downloadable sqlite database to use and run alongside the lesso
     - [Creating and Using Indexes](./indexes/Intro-to-Indexes)
     - [Other Types of Indexes](./indexes/Other-types-of-Indexes.md)
 5. [Advanced SQL](./advanced-sql/README.md)
+   - [Recursive CTEs](./advanced-sql/Recursive-CTEs.md)
 
 ---
 
