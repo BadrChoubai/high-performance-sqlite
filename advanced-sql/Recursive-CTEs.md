@@ -22,14 +22,6 @@ We start with `SELECT 1 AS N`, which is our initial condition. In a recursive CT
 because if you don't, it has to track every row generated to avoid duplicates. By using `UNION ALL`, it simplifies the
 process.
 
-Now, for the recursive condition, we reference the table we are building up. So, we’ll write:
-
-```sqlite
-SELECT N + 1
-FROM numbers
-WHERE N < 10
-```
-
 If we run this, we generate ten numbers from the initial value of 1 up to 10. Remember to always include a limit
 condition; otherwise, it could run indefinitely. You could do something like `LIMIT 10` or set a condition such as
 `WHERE N < 10`.
