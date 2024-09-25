@@ -7,7 +7,7 @@
 The `EXPLAIN` and `EXPLAIN QUERY PLAN` statements in SQL, particularly in databases like SQLite, are valuable tools for
 understanding and optimizing query performance.
 
-### 1. **`EXPLAIN` Statement:**
+### 1. `EXPLAIN` Statement:
 
 - The `EXPLAIN` statement provides detailed information about how SQLite executes a query, offering a low-level view of
   each operation the database engine performs.
@@ -29,7 +29,7 @@ understanding and optimizing query performance.
     - Gaining insight into how the database processes different components of the query, including joins, filters, and
       index usage.
 
-### 2. **`EXPLAIN QUERY PLAN` Statement:**
+### 2. `EXPLAIN QUERY PLAN` Statement:
 
 - `EXPLAIN QUERY PLAN` offers a more abstract and higher-level overview of how the database will execute a query,
   focusing on the query execution strategy.
@@ -84,7 +84,6 @@ queries.
 
   > The `EXPLAIN QUERY PLAN` output above shows that SQLite scans the `bookmarks` table first and then searches the
   > `users` table using its primary key (indexed by `rowid`).
-
 ### Inner Join Behavior:
 
 - An inner join returns only rows where there is a match in both the left (`users`) and right (`bookmarks`) tables.
