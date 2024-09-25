@@ -3,6 +3,18 @@
 This project contains source code, artifacts, and written notes created while learning the foundations of SQL and
 SQLite.
 
+## Setting up our Database
+
+The course has a downloadable sqlite database to use and run alongside the lessons.
+
+1. I've created a separate repository that contains a zip archive of the database:
+    - [https://github.com/BadrChoubai/demo-database](https://github.com/BadrChoubai/demo-database)
+2. You can clone the database with `git clone https://github.com/BadrChoubai/demo-database`
+3. Then you can run `unzip` the contents of the archive into this project
+   ```bash
+   unzip ~/git/demo-database/database.zip .
+   ```
+
 ## Chapters
 
 1. [SQLite Internals](./sqlite-internals/README.md)
@@ -11,6 +23,7 @@ SQLite.
 4. [Indexes](./indexes/README.md)
     - [Creating and Using Indexes](./indexes/Intro-to-Indexes)
     - [Other Types of Indexes](./indexes/Other-types-of-Indexes.md)
+5. [Advanced SQL](./advanced-sql/README.md)
 
 ---
 
@@ -44,19 +57,21 @@ that stores everything in a single file.
 - **Not built for large-scale, high-performance systems**: It’s perfect for smaller projects but not for
   enterprise-level applications that require robust transaction handling and scalability.
 
-    > ### SQLite Security Considerations:
-    >
-    > - **No Built-In User Authentication**: Unlike larger database systems like PostgreSQL or MySQL, SQLite doesn’t have a
-        concept of users or roles with specific permissions. There’s no fine-grained access control—anyone with access to
-        the database file can read and write to it.
-    > - **File-Based Security**: Since SQLite stores data in a single file, securing the database depends largely on the
-        file system permissions. You should ensure that only trusted users or processes can read or modify the database
-        file.
-    > - **Encryption**: SQLite doesn’t provide encryption by default, but you can use external libraries, like SQLite
-        Encryption Extension (SEE) or SQLCipher, to encrypt the database file. This is critical if the file might be stored
-        on untrusted devices or environments (e.g., in mobile apps).
-    > - **Data Integrity**: Even though it doesn’t have fine-grained access controls, SQLite still provides security for
-        data integrity with ACID-compliant transactions and journaling to prevent corruption.
+  > ### SQLite Security Considerations:
+  >
+  > - **No Built-In User Authentication**: Unlike larger database systems like PostgreSQL or MySQL, SQLite doesn’t have
+      a
+      concept of users or roles with specific permissions. There’s no fine-grained access control—anyone with access to
+      the database file can read and write to it.
+  > - **File-Based Security**: Since SQLite stores data in a single file, securing the database depends largely on the
+      file system permissions. You should ensure that only trusted users or processes can read or modify the database
+      file.
+  > - **Encryption**: SQLite doesn’t provide encryption by default, but you can use external libraries, like SQLite
+      Encryption Extension (SEE) or SQLCipher, to encrypt the database file. This is critical if the file might be
+      stored
+      on untrusted devices or environments (e.g., in mobile apps).
+  > - **Data Integrity**: Even though it doesn’t have fine-grained access controls, SQLite still provides security for
+      data integrity with ACID-compliant transactions and journaling to prevent corruption.
 
 ### Comparison to other Technologies:
 

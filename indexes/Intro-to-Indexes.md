@@ -52,7 +52,7 @@ Let's add an index to the birthday and see where it can be used:
 1. Create the index
 
 ```sqlite
-CREATE INDEX bday on users (birthday);
+CREATE INDEX idx_bday on users (birthday);
 PRAGMA INDEX_INFO('bday');
 PRAGMA INDEX_LIST(users);
 ```
@@ -66,9 +66,9 @@ FROM users
 where birthday = '1989-02-14'
 ```
 
-| id | parent | notused | detail                                       |
-|:---|:-------|:--------|:---------------------------------------------|
-| 3  | 0      | 0       | SEARCH users USING INDEX bday \(birthday=?\) |
+| id | parent | notused | detail                                           |
+|:---|:-------|:--------|:-------------------------------------------------|
+| 3  | 0      | 0       | SEARCH users USING INDEX idx_bday \(birthday=?\) |
 
 A few more queries you can run to see how the index we created is being used:
 
@@ -141,8 +141,8 @@ columns, testing queries against that index, and understanding the rules for how
 The first step in our example involves creating a composite index on the `users` table:
 
 ```sqlite
-CREATE INDEX multi ON users (first_name, last_name, birthday);
-PRAGMA INDEX_INFO(multi);
+CREATE INDEX idx_multi ON users (first_name, last_name, birthday);
+PRAGMA INDEX_INFO(idx_multi);
 ```
 
 | seqno | cid | name       |
@@ -253,3 +253,15 @@ Using composite indexes effectively can dramatically improve query performance i
 understand the rules governing how SQLite uses indexes: queries must access columns from left to right, and range
 conditions halt further index use. By following these guidelines, you can design indexes that serve multiple queries and
 avoid unnecessary full table scans.
+
+##### Cleanup Created Indexes
+
+```sqlite
+PRAGMA INDEX_LIST(users);
+-- Cleanup indexes for this lesson
+DROP INDEX IF EXISTS idx_multi;
+DROP INDEX IF EXISTS idx_pro_emails;
+DROP INDEX IF EXISTS idx_email_domain;
+DROP INDEX IF EXISTS idx_email_is_pro;
+DROP INDEX IF EXISTS idx_active_emails;
+```

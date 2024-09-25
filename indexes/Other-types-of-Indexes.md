@@ -69,7 +69,6 @@ Partial indexes are useful in situations where:
 - You want to enforce uniqueness or optimize queries for specific subsets of data.
 
 ```sqlite
--- We should have about 600 "pro" users in our database
 EXPLAIN QUERY PLAN
 SELECT COUNT(*)
 FROM users
@@ -83,8 +82,8 @@ SELECT email
 FROM users
 WHERE is_pro = 1;
 
-CREATE INDEX pro_emails ON users (email) WHERE is_pro = 1;
-PRAGMA INDEX_INFO(pro_emails);
+CREATE INDEX idx_pro_emails ON users (email) WHERE is_pro = 1;
+PRAGMA INDEX_INFO(idx_pro_emails);
 
 EXPLAIN QUERY PLAN
 SELECT email
@@ -114,19 +113,19 @@ FROM users
 WHERE is_pro = 0;
 ```
 
-We have 624 pro users and 2479 free users. If we were frequently querying the pro members, we could create an index like
+We should have a lot of pro users and a lot of free users. If we were frequently querying the pro members, we could create an index like
 this:
 
 ```sqlite
-CREATE INDEX email_is_pro ON users (email);
+CREATE INDEX idx_email_is_pro ON users (email);
 ```
 
 But that would index all the users, which is unnecessary for our needs. A more efficient solution is to create a partial
 index:
 
 ```sqlite
-CREATE INDEX pro_emails ON users (email) WHERE is_pro = 1;
-PRAGMA INDEX_INFO(pro_emails);
+CREATE INDEX idx_pro_emails ON users (email) WHERE is_pro = 1;
+PRAGMA INDEX_INFO(idx_pro_emails);
 ```
 
 By creating this partial index, we ensure only pro users’ emails are indexed. Let's test its effectiveness by querying
@@ -140,7 +139,7 @@ WHERE email LIKE 'AA%'
 LIMIT 4;
 ```
 
-SQLite uses the pro_emails index for this query. If we were to remove the condition on is_pro, the query would take
+SQLite uses the idx_idx_pro_emails index for this query. If we were to remove the condition on is_pro, the query would take
 longer because it would scan the entire table. By using a partial index, queries on pro users are much faster.
 
 One thing to note is that partial indexes only work when the query matches the WHERE condition in the index definition.
@@ -175,7 +174,7 @@ WHERE id = 208;
 Now, we can successfully create the unique index:
 
 ```sqlite
-CREATE UNIQUE INDEX active_emails ON users (email) WHERE deleted_at IS NULL;
+CREATE UNIQUE INDEX idx_active_emails ON users (email) WHERE deleted_at IS NULL;
 ```
 
 This index enforces email uniqueness only for active users, allowing multiple deleted accounts with the same email.
@@ -227,8 +226,8 @@ column), we can directly index this expression.
 Once we have our expression, we can create an index on it just as we would for any other column. Here's the query:
 
 ```sqlite
-CREATE INDEX email_domain ON users (SUBSTR(email, INSTR(email, '@') + 1));
-PRAGMA INDEX_INFO(email_domain);
+CREATE INDEX idx_email_domain ON users (SUBSTR(email, INSTR(email, '@') + 1));
+PRAGMA INDEX_INFO(idx_email_domain);
 ```
 
 This creates an index on the domain part of the email. Let's test the performance by running a query that searches for
@@ -256,10 +255,10 @@ WHERE SUBSTR(email, INSTR(email, '@') + 1) = 'green.info'
 LIMIT 3;
 ```
 
-The result should indicate that SQLite is using the `email_domain` index:
+The result should indicate that SQLite is using the `idx_email_domain` index:
 
 ```plaintext
-SEARCH users USING INDEX email_domain (<expr>=?)
+SEARCH users USING INDEX idx_email_domain (<expr>=?)
 ```
 
 This shows that our index on the email domain is being utilized effectively to speed up the query.
@@ -318,13 +317,13 @@ multiple indexes with the same leftmost prefix could be redundant.
 Let’s say we create the following indexes on the `users` table:
 
 ```sqlite
-CREATE INDEX email_index ON users (email);
-CREATE INDEX email_is_pro_index ON users (email, is_pro);
+CREATE INDEX idx_email ON users (email);
+CREATE INDEX idx_email_is_pro ON users (email, is_pro);
 ```
 
-These two indexes share the leftmost prefix `email`. The second index (`email_is_pro_index`) is a **composite index**
+These two indexes share the leftmost prefix `email`. The second index (`idx_email_is_pro`) is a **composite index**
 that starts with `email` and adds `is_pro` as a second column. Since SQLite starts with the leftmost column (`email`),
-the second index can perform the same role as the first, making the first index (`email_index`) redundant.
+the second index can perform the same role as the first, making the first index (`idx_email`) redundant.
 
 > ### Why Duplicate Indexes Matter
 >
@@ -338,8 +337,8 @@ the second index can perform the same role as the first, making the first index 
 > WHERE email = 'aaron.francis@example.com';
 > ```
 
-Even if the simpler index (`email_index`) is dropped, SQLite will use the more complex composite index (
-`email_is_pro_index`) to perform the query, since it starts with the same leftmost prefix. Therefore, the single-column
+Even if the simpler index (`idx_email`) is dropped, SQLite will use the more complex composite index (
+`idx_email_is_pro`) to perform the query, since it starts with the same leftmost prefix. Therefore, the single-column
 index is unnecessary.
 
 ### Identifying and Removing Duplicate Indexes
@@ -362,19 +361,15 @@ PRAGMA INDEX_LIST(users);
 | 3   | bday             | 0      | c      | 0       |
 
 This will show you all the indexes on the `users` table. You can then assess whether any share a leftmost prefix and
-decide which ones to drop:
+decide which ones to drop.
 
-```sqlite
-DROP INDEX email_domain;
-```
-
-Now, SQLite can still efficiently query `email` using the `email_is_pro_index`.
+Now, SQLite can still efficiently query `email` using the `pro_user_email` index.
 
 ### The Caveat: Hidden Row IDs and Sorting
 
 There’s a small caveat to this: when you create an index on a single column, SQLite actually adds the **row ID** (or
 `id` if it’s defined explicitly) to the index. This means that a simple index on `email` is actually stored as
-`email, row_id`. Similarly, the composite index `email_is_pro_index` is stored as `email, is_pro, row_id`.
+`email, row_id`. Similarly, the composite index `idx_email_is_pro` is stored as `email, is_pro, row_id`.
 
 This can matter in some cases. For example, if you run a query that involves sorting by the `id`:
 
@@ -387,7 +382,7 @@ ORDER BY id DESC;
 ```
 
 If the index includes `id` implicitly (as is the case with a single-column index on `email`), it can be used both for
-filtering by `email` and for sorting by `id`. However, if you are using the `email_is_pro_index`, the `is_pro` column
+filtering by `email` and for sorting by `id`. However, if you are using the `idx_email_is_pro_index`, the `is_pro` column
 gets in the way, and SQLite can’t use the implicit `id` for sorting. This forces SQLite to create a temporary B-tree for
 the sorting operation, which is slower:
 
@@ -405,9 +400,9 @@ To avoid this, you might decide to keep the simpler `email_index` for cases wher
 
 #### Summary:
 
-- **Duplicate Indexes**: Indexes that share the same leftmost prefix (e.g., `email` in both `email_index` and
-  `email_is_pro_index`) are typically redundant, and you can usually remove the one with fewer columns.
+- **Duplicate Indexes**: Indexes that share the same leftmost prefix (e.g., `email` in both `idx_email` and
+  `idx_email_is_pro`) are typically redundant, and you can usually remove the one with fewer columns.
 - **Row IDs and Sorting**: Be mindful of the hidden row ID when creating indexes. If you frequently sort by `id`, a
-  single-column index (like `email_index`) may still be useful, even if it seems redundant.
+  single-column index (like `idx_email`) may still be useful, even if it seems redundant.
 - **Query Optimization**: Removing redundant indexes can reduce storage overhead and prevent confusion in the query
   planner, ensuring your database operates more efficiently.
