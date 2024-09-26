@@ -27,6 +27,10 @@ The course has a downloadable sqlite database to use and run alongside the lesso
    - [Recursive CTEs](./advanced-sql/Recursive-CTEs.md)
    - [Window Functions](./advanced-sql/Window-Functions.md)
 
+### Quick Bits
+
+- [Dealing with `NULL`](./quick-bits/NULL.md)
+
 ---
 
 ## Introduction to SQLite
