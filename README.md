@@ -26,6 +26,7 @@ The course has a downloadable sqlite database to use and run alongside the lesso
 5. [Advanced SQL](./advanced-sql/README.md)
    - [Recursive CTEs](./advanced-sql/Recursive-CTEs.md)
    - [Window Functions](./advanced-sql/Window-Functions.md)
+   - [Row Value Syntax](./advanced-sql/Row-Value-Syntax.md)
 
 ### Quick Bits
 

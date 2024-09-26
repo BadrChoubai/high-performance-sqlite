@@ -97,3 +97,68 @@ CREATE INDEX pid ON categories (parent_id DESC NULLS LAST);
 Despite the error, you may notice that the index created still optimizes queries even if it doesn't support `NULL`
 positioning. This behavior can be a bit confusing, but it's useful to know that controlling the display of `NULL` values
 in your result set is a powerful feature, allowing you to use `NULLS FIRST` or `NULLS LAST` in your queries.
+
+## Handling `NULL` - Row Value Syntax
+
+- [Row Value Syntax Notes](../advanced-sql/Row-Value-Syntax.md)
+
+### Basic Example
+
+To use row value syntax, you enclose the values in parentheses, separated by commas. For example:
+
+```sqlite
+SELECT (1, 2, 3) = (1, 2, 3);
+```
+
+| \(1, 2, 3\) = \(1, 2, 3\) |
+|:--------------------------|
+| 1                         |
+
+Here, the expression evaluates to `TRUE` because all values in both rows match.
+
+### Handling `NULL` Values
+
+However, when `NULL` values are introduced, the comparison behaves differently. As seen before, comparing a value to
+`NULL` results in an unknown (`NULL`), and this extends to row value syntax as well.
+
+For instance, consider the following:
+
+```sqlite
+SELECT (1, 2, 3) = (1, NULL, 3);
+```
+
+| \(1, 2, 3\) = \(1, NULL, 3\) |
+|:-----------------------------|
+| NULL                         |
+
+In this case, the comparison returns `NULL` because of the presence of a `NULL` in one of the values. Since `NULL`
+introduces uncertainty, it causes the entire row comparison to be indeterminate.
+
+#### Further Example with `NULL`
+
+Even if there are mismatches in the other values, the presence of a `NULL` still affects the result. For example:
+
+```sqlite
+SELECT (1, 2, 3) = (1, NULL, 4);
+```
+
+| \(1, 2, 3\) = \(1, NULL, 4\) |
+|:-----------------------------|
+| 0                            |
+
+Here, the comparison evaluates to `FALSE`. Despite the uncertainty introduced by the `NULL`, the final result is
+determined by the mismatch between the last two values (3 and 4), which clearly do not match. Thus, the overall
+comparison returns `FALSE`.
+
+#### Practical Use Cases
+
+Row value syntax with `NULL` handling can be useful in scenarios where you want to compare multiple columns
+simultaneously. However, it's important to be aware of how `NULL` values can affect the outcome of these comparisons,
+potentially making them uncertain or `FALSE` depending on the context.
+
+To avoid issues with `NULL` in row comparisons, consider using `IS` or `IS NOT` for null-safe comparisons. For example,
+using the following ensures `NULL` is handled explicitly:
+
+```sqlite
+SELECT (1, 2 IS NOT NULL, 3) = (1, 1, 3);
+```
