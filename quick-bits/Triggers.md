@@ -81,6 +81,7 @@ trigger.
 -- Cleanup
 DELETE
 FROM email_audit;
+
 DROP TRIGGER trg_email_updated;
 ```
 
