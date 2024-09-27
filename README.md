@@ -33,6 +33,7 @@ The course has a downloadable sqlite database to use and run alongside the lesso
 ### Quick Bits
 
 - [Dealing with `NULL`](./quick-bits/NULL.md)
+- [The `RETURNING` Clause](./quick-bits/Returning.md)
 
 ---
 
