@@ -29,11 +29,13 @@ The course has a downloadable sqlite database to use and run alongside the lesso
    - [Row Value Syntax](./advanced-sql/Row-Value-Syntax.md)
    - [Indexed Sorting](./advanced-sql/Indexed-Sorting.md)
    - [Upserts](./advanced-sql/Upserts.md)
+   - [Aggregates](./advanced-sql/Aggregates.md)
 
 ### Quick Bits
 
 - [Dealing with `NULL`](./quick-bits/NULL.md)
 - [The `RETURNING` Clause](./quick-bits/Returning.md)
+- [Triggers](./quick-bits/Triggers.md)
 
 ---
 
