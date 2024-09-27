@@ -1,7 +1,5 @@
 # Advanced SQL
 
----
-
 ## The `EXPLAIN` and `EXPLAIN QUERY PLAN` SQL Commands
 
 The `EXPLAIN` and `EXPLAIN QUERY PLAN` statements in SQL, particularly in databases like SQLite, are valuable tools for
