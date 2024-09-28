@@ -30,6 +30,7 @@ The course has a downloadable sqlite database to use and run alongside the lesso
    - [Indexed Sorting](./advanced-sql/Indexed-Sorting.md)
    - [Upserts](./advanced-sql/Upserts.md)
    - [Aggregates](./advanced-sql/Aggregates.md)
+6. [Operating SQLite](./operating-sqlite/README.md)
 
 ### Quick Bits
 
