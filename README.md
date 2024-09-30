@@ -31,6 +31,7 @@ The course has a downloadable sqlite database to use and run alongside the lesso
    - [Upserts](./advanced-sql/Upserts.md)
    - [Aggregates](./advanced-sql/Aggregates.md)
 6. [Operating SQLite](./operating-sqlite/README.md)
+   - [Altering Schema with Tools](./operating-sqlite/Altering-Tools.md)
 
 ### Quick Bits
 
