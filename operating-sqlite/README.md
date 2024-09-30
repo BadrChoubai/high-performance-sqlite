@@ -6,12 +6,13 @@
 
 > This diagram shows the available commands in SQLite for altering schemas or tables.
 
-SQLite's documentation provides a twelve-step process for altering schema, which can be simplified into four steps:
+SQLite's documentation provides a [twelve-step process](#modifying-columns-the-twelve-step-process) for altering schema,
+which can be simplified into four steps:
 
-1. **Create a New Table**
-2. **Copy Data from Old Table to New Table**
-3. **Drop the Old Table**
-4. **Rename the New Table**
+1. Create a New Table
+2. Copy Data from Old Table to New Table
+3. Drop the Old Table
+4. Rename the New Table
 
 ```sqlite
 PRAGMA FOREIGN_KEYS = off;
@@ -112,7 +113,7 @@ foreign key updates) are implemented correctly.
 
 ### Other Strategies for Altering Schema
 
-- [Altering Schema with Tools](./Altering-Tools.md)
+- Altering Schema with Tools
     - One option for working with SQLite is using the [`sqlite-utils`](https://github.com/simonw/sqlite-utils) package
       developed by Simon Willison.
     - Another options is to use an Open Source and Contribution fork of SQLite, like
