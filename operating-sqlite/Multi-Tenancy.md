@@ -7,7 +7,7 @@
     - **Single-tenant**: Used by one company, often in-house (e.g., a CRM system).
     - **Multi-tenant**: A common setup in SaaS where multiple clients share the same application infrastructure.
 
-### Two Approaches to Multi-Tenancy at the Database Layer:
+## Two Approaches to Multi-Tenancy at the Database Layer:
 
 1. **Single Database with Tenant Column**:
     - **How it works**:  

@@ -31,6 +31,10 @@ The course has a downloadable sqlite database to use and run alongside the lesso
    - [Upserts](./advanced-sql/Upserts.md)
    - [Aggregates](./advanced-sql/Aggregates.md)
 6. [Operating SQLite](./operating-sqlite/README.md)
+   - [Altering Schema](./operating-sqlite/Altering-Schema.md)
+   - [Backing up SQLite](./operating-sqlite/Backing-Up-SQLite.md)
+   - [Exporting SQLite](./operating-sqlite/Exporting-SQLite.md)
+   - [How _not_ to Corrupt SQLite](./operating-sqlite/How-to-not-corrupt-SQLite.md)
    - [Multi-Tenancy](./operating-sqlite/Multi-Tenancy.md)
 
 ### Quick Bits
