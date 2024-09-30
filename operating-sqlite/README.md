@@ -86,3 +86,14 @@ Exporting differs from backing up as it produces a SQL script that can recreate 
    systems generally avoid this issue.
 
 [Chapter Notes](./How-to-not-corrupt-SQLite.md)
+
+--- 
+
+## Multi-Tenancy
+
+Multi-tenancy is a crucial architectural concept in database systems, allowing a single database instance to efficiently
+serve multiple customers (tenants) while ensuring data security and isolation. In a multi-tenant database environment,
+tenant data can be stored either within a single database using tenant identifiers or in separate databases for each
+tenant.
+
+[Chapter Notes](./Multi-Tenancy.md)
