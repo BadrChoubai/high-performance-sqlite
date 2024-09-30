@@ -7,8 +7,6 @@
     - **Single-tenant**: Used by one company, often in-house (e.g., a CRM system).
     - **Multi-tenant**: A common setup in SaaS where multiple clients share the same application infrastructure.
 
----
-
 ### Two Approaches to Multi-Tenancy at the Database Layer:
 
 1. **Single Database with Tenant Column**:
@@ -33,8 +31,6 @@
         - More complex operationally: Managing multiple databases can be harder.
         - Scaling: You’ll have as many database files as tenants, but this is manageable with SQLite since it's
           file-based.
-
----
 
 ### Managing Multi-Tenant SQLite Databases
 
@@ -65,8 +61,6 @@
       risk of
       data leakage.
 
----
-
 ### Managing Schema Migrations Across Tenant Databases
 
 1. **Tracking Schema Versions with `PRAGMA user_version`**:
@@ -82,8 +76,6 @@
     - Perform migrations gradually, updating a few tenant databases at a time and checking for errors before migrating
       the entire set.
 
----
-
 ### Tools and Services for Multi-Tenancy with SQLite
 
 - **Vanilla SQLite**:
@@ -91,8 +83,6 @@
 - **Turso (Mentioned but not part of the course)**:
     - A service that makes it easier to manage multi-tenant databases by automating schema duplication and migrations
       across databases.
-
----
 
 ### Example Scenarios
 
