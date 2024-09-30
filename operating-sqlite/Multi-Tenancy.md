@@ -1,11 +1,19 @@
 # Multi-Tenancy
 
-**Definition**:
+Multi-tenancy is an architectural model that allows a single application to serve multiple customers (tenants) while
+ensuring data isolation and security. This approach is especially common in Software as a Service (SaaS) environments,
+where efficiency and scalability are paramount. By adopting multi-tenancy, businesses can streamline resource
+utilization, reduce operational costs, and enhance their capacity for innovation.
 
-- Multi-tenancy refers to a single application being used by multiple customers (tenants).
-- Contrast:
-    - **Single-tenant**: Used by one company, often in-house (e.g., a CRM system).
-    - **Multi-tenant**: A common setup in SaaS where multiple clients share the same application infrastructure.
+In the context of database systems, multi-tenancy supports efficient resource management and scalability, making it an
+ideal choice for SaaS applications. However, it also introduces complexities related to data access control, query
+management, and schema migrations.
+
+**Definitions**:
+
+- **Multi-tenancy**: A single application serving multiple customers (tenants).
+- **Single-tenant**: An application used by one company, often hosted in-house (e.g., a CRM system).
+- **Multi-tenant**: A common configuration in SaaS where multiple clients share the same application infrastructure.
 
 ## Two Approaches to Multi-Tenancy at the Database Layer:
 

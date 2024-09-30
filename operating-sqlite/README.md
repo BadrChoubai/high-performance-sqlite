@@ -91,9 +91,11 @@ Exporting differs from backing up as it produces a SQL script that can recreate 
 
 ## Multi-Tenancy
 
-Multi-tenancy is a crucial architectural concept in database systems, allowing a single database instance to efficiently
-serve multiple customers (tenants) while ensuring data security and isolation. In a multi-tenant database environment,
-tenant data can be stored either within a single database using tenant identifiers or in separate databases for each
-tenant.
+Multi-tenancy is an architectural model that enables a single application to serve multiple customers (tenants) while
+ensuring data isolation and security, particularly prevalent in Software as a Service (SaaS) environments where
+efficiency and scalability are paramount. By adopting multi-tenancy, businesses can streamline resource utilization,
+reduce operational costs, and enhance their capacity for innovation. In the context of database systems, this model
+supports efficient resource management and scalability, making it an ideal choice for SaaS applications, though it also
+introduces complexities related to data access control, query management, and schema migrations.
 
 [Chapter Notes](./Multi-Tenancy.md)
