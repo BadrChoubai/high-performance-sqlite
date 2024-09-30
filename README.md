@@ -31,12 +31,14 @@ The course has a downloadable sqlite database to use and run alongside the lesso
    - [Upserts](./advanced-sql/Upserts.md)
    - [Aggregates](./advanced-sql/Aggregates.md)
 6. [Operating SQLite](./operating-sqlite/README.md)
+   - [Multi-Tenancy](./operating-sqlite/Multi-Tenancy.md)
 
 ### Quick Bits
 
 - [Dealing with `NULL`](./quick-bits/NULL.md)
 - [The `RETURNING` Clause](./quick-bits/Returning.md)
 - [Triggers](./quick-bits/Triggers.md)
+- [Operating SQLite: Multi-Database Approach](./quick-bits/Multi-Database.md)
 
 ---
 
