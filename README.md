@@ -36,7 +36,7 @@ The course has a downloadable sqlite database to use and run alongside the lesso
    - [Exporting SQLite](./operating-sqlite/Exporting-SQLite.md)
    - [How _not_ to Corrupt SQLite](./operating-sqlite/How-to-not-corrupt-SQLite.md)
    - [Multi-Tenancy](./operating-sqlite/Multi-Tenancy.md)
-7. [Advanced JSON](./advanced-sql/README.md)
+7. [Advanced JSON](./advanced-json/README.md)
    - [Argument Types](./advanced-json/Argument-Types.md)
    - [JSON Functions](./advanced-json/JSON-Functions.md)
 

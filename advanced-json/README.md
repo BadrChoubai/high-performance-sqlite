@@ -20,6 +20,17 @@ Additionally, we'll cover three types of JSON functions: scalar, aggregate, and 
 wide range of operations, from retrieving single values to generating entire tables from JSON data, giving you a
 powerful toolkit to process and manipulate JSON within your database.
 
+**Chapters in this Lesson**:
+
+- [Argument Types](./Argument-Types.md)
+- [JSON Functions](./JSON-Functions.md)
+
+**Sections**:
+
+- [JSON vs. JSONB](#json-vs-jsonb-in-sqlite-key-differences)
+- [Valid JSON](#valid-json)
+- [Creating JSON Objects + Arrays](#creating-json-objects--arrays)
+
 ---
 
 ## JSON vs. JSONB in SQLite: Key Differences
@@ -88,3 +99,152 @@ powerful toolkit to process and manipulate JSON within your database.
 
 ---
 
+## Valid JSON
+
+- SQLite provides several JSON-related functions, including `json`, `jsonb`, and `json_valid`, which work with **valid
+  JSON** and **JSON5** formats.
+- **JSON5** is a human-friendly version of JSON that allows for comments, unquoted keys, extra whitespace, and more.
+- **JSON Handling in SQLite**:
+    - **`json` Function**:
+        - Accepts **valid JSON** or **JSON5** and converts it to **standard JSON text**.
+        - You can pass simple values (e.g., `1`, `true`, or an object) to it, and it returns the JSON representation as
+          a string.
+        - Useful for applications that need JSON formatted as text.
+    - **`jsonb` Function**:
+        - Similar to `json`, but instead of returning text, it returns a **binary representation (JSON-B)**.
+        - **Opaque to the user**: You can't inspect it or manipulate it directly.
+        - It should only be used to store or pass JSON to other SQLite functions to improve performance by avoiding
+          repeated
+          parsing.
+- If invalid JSON is passed to `json` or `jsonb`, SQLite raises a **runtime error** without crashing. This ensures the
+  database remains stable even if it encounters malformed JSON.
+- Example of invalid JSON:
+  ```sql
+  SELECT json('{"key": value}');
+  -- [1] [SQLITE_ERROR] SQL error or missing database (malformed JSON)
+  ```
+
+### Validating JSON with `json_valid`
+
+- **`json_valid` Function**:
+    - Used to check if the input is valid JSON before processing it further.
+    - **Returns 1 (valid) or 0 (invalid)**.
+    - Can validate both JSON and JSON5 inputs.
+    - **Default Behavior**: If no second parameter is provided, it defaults to **Bit 1** (strict JSON validation).
+
+- **Bit Flags in `json_valid`**:
+    - You can pass a second parameter (bit flags) to fine-tune the validation process:
+        1. **Bit 1 (Strict JSON Validation)**: Validates against **strict RFC 8259** JSON (standard JSON).
+        2. **Bit 2 (JSON5 Validation)**: Validates **JSON5** inputs, allowing its flexible features like comments and
+           unquoted keys.
+        3. **Bit 3 (Blob Validation)**: Validates if the input is a **JSON-B blob** but does not perform deep
+           validation.
+        4. **Bit 4 (Strict Blob Validation)**: Validates if the input strictly conforms to the JSON-B standard.
+    - **Default Behavior**: If no second parameter is provided, it defaults to **Bit 1** (strict JSON validation).
+
+### Combining Bit Flags in `json_valid`
+
+- The bit flags can be **combined** to check multiple formats at once by summing their values.
+    - **Example: Bit 2 (JSON5) + Bit 3 (JSON-B)**:
+      ```sql
+      SELECT json_valid(input, 6);  -- Validates JSON5 and JSON-B
+      ```
+- **Common Bit Flag Combinations**:
+    - **Bit 2 + Bit 3 (Value 6)**: Validates both **JSON5 as text** and **JSON-B blobs**.
+    - **Bit 2 + Bit 4 (Value 10)**: Validates **strict JSON5** and **strict JSON-B blobs**.
+
+#### Summary:
+
+- SQLite provides robust support for handling JSON and JSON5 formats through its `json`, `jsonb`, and `json_valid`
+  functions.
+- **Performance Optimization**: Use JSON-B for faster operations and storage efficiency.
+- **Validation Options**: `json_valid` offers flexibility in checking different JSON formats, ensuring your data is
+  properly formatted before using it in SQLite.
+
+**Best Practices:**
+
+- **Use `json_valid`** to validate JSON inputs, especially if you're not certain about their format.
+- **Leverage JSON-B** for performance improvements in scenarios where you need to store and query large amounts of JSON
+  data.
+- **Combine bit flags** in `json_valid` based on your use case:
+    - Use **Bit 2 + Bit 3 (Value 6)** for most scenarios, as it covers **both JSON5 and JSON-B validation**.
+
+**JSON-B Performance Advantages**:
+
+- **JSON-B (Binary Representation)**:
+    - Storing and querying JSON as binary (using `jsonb`) improves performance:
+        - Faster queries: Avoids parsing JSON repeatedly.
+        - Smaller storage footprint: Compressed binary format.
+    - Ideal for scenarios where JSON is read frequently but not edited.
+
+---
+
+## Creating JSON Objects + Arrays
+
+SQLite provides multiple ways to **create JSON objects** and **arrays**. The most basic method is to pass values into
+the `json` function.
+
+```sql
+SELECT json('
+{
+    "foo": 1, 
+    "bar": "baz", 
+    "baz": [1, 2, 3]
+}');
+-- Returns: {"foo":1,"bar":"baz","baz":[1,2,3]}
+```
+
+### Other  Methods for Creating JSON:
+
+1. **`json_object()`**:
+    - Used to create **JSON objects** with key-value pairs.
+    - **Key (Label)** and **Value** are passed as arguments. The first argument is the key, and the second is the value.
+    - Example:
+      ```sql
+      SELECT json_object('key', 'value');
+      -- Returns: '{"key": "value"}'
+      ```
+
+2. **`json_array()`**:
+    - Used to create **JSON arrays** by passing multiple arguments (variadic).
+    - Example:
+      ```sql
+      SELECT json_array(1, 2, 3);
+      -- Returns: '[1, 2, 3]'
+      ```
+
+> **JSON-B Variants**:
+>- Similar to `json` and `json_array`, you can use the **binary** versions for faster storage and retrieval:
+>  - `jsonb()`: Returns a binary representation of JSON text.
+>  - `jsonb_array()`: Returns a binary representation of a JSON array.
+>  - `jsonb_object()`: Returns a binary representation of a JSON object.
+>  
+> These binary representations are faster to use when working with large datasets.
+
+### Inspecting Arrays
+
+- `json_array_length()`:
+    - This function returns the **number of elements** in a JSON array.
+    - It works with both **standalone arrays** and **arrays embedded within JSON objects**.
+    - To inspect an array inside a JSON object, use the **JSON Path** syntax (`$`) to specify the location of the array
+      within the object.
+    - Examples:
+        - Standalone array:
+          ```sql
+          SELECT json_array_length('[1, 2, 3, 4, 5]');
+          -- Returns: 5
+          ```
+        - Array inside a JSON object:
+          ```sql
+          SELECT json_array_length('{"foo": [1, 2, 3, 4, 5]}', '$.foo');
+          -- Returns: 5
+          ```
+
+#### Summary:
+
+- **Creating JSON**: You can create JSON using the `json`, `json_object`, and `json_array` functions.
+- **Array Inspection**: Use `json_array_length` to find out the size of arrays, even when embedded in objects.
+- **Binary vs. Text**: For better performance, use `jsonb`, `jsonb_array`, and `jsonb_object` when handling JSON data
+  frequently.
+
+---
