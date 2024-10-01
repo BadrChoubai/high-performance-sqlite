@@ -36,6 +36,9 @@ The course has a downloadable sqlite database to use and run alongside the lesso
    - [Exporting SQLite](./operating-sqlite/Exporting-SQLite.md)
    - [How _not_ to Corrupt SQLite](./operating-sqlite/How-to-not-corrupt-SQLite.md)
    - [Multi-Tenancy](./operating-sqlite/Multi-Tenancy.md)
+7. [Advanced JSON](./advanced-sql/README.md)
+   - [Argument Types](./advanced-json/Argument-Types.md)
+   - [JSON Functions](./advanced-json/JSON-Functions.md)
 
 ### Quick Bits
 
@@ -43,6 +46,7 @@ The course has a downloadable sqlite database to use and run alongside the lesso
 - [The `RETURNING` Clause](./quick-bits/Returning.md)
 - [Triggers](./quick-bits/Triggers.md)
 - [Operating SQLite: Multi-Database Approach](./quick-bits/Multi-Database.md)
+- [JSON5 Support in SQLite](./quick-bits/JSON5.md)
 
 ---
 
