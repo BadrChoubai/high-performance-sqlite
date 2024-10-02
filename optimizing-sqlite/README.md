@@ -4,46 +4,82 @@
 
 # Optimizing SQLite
 
-## Locking
+A common criticism of SQLite is that it is not ready for production due to its limitation of supporting only **one
+concurrent writer**. 
 
-### 1. Unlocked
+Despite this limitation, SQLite can handle **many thousands of reads** and **potentially thousands
+of writes** per second, making it suitable for production use in many applications.
 
-- **Description**: In the "Unlocked" state, no locks are held on the database. Multiple processes can read from or write
-  to the database, assuming no other locks have been placed. This is the default state when no transaction is active.
-- **Use Case**: When the database is idle or no transactions are currently taking place.
+## SQLite Performance for Reads and Writes:
 
-### 2. Shared Lock
+- SQLite can support **hundreds of thousands of read queries** per second due to its efficient handling of **concurrent
+  reads**.
+- While only **one process can write** at a time, the **speed of writes** is generally so fast that most users won't
+  notice delays.
+- In many cases, **tens of thousands of writes** per second can be supported, depending on the nature of the write
+  operations.
 
-- **Description**: A "Shared Lock" allows multiple processes to read from the database at the same time, but none of them
-  can write. This lock ensures that no changes are made to the database while data is being read.
-- **Use Case**: When a process starts a read operation, it acquires a shared lock to prevent writes during the read
-  operation, ensuring consistency.
+### Five States of SQLite Locks
 
-### 3. Reserved Lock
+SQLite employs a **sophisticated locking mechanism** to ensure the consistency and safety of reads and writes.
 
-- **Description**: The "Reserved Lock" indicates that a process intends to write to the database but has not yet begun
-  the write operation. This lock allows the process to continue reading but prevents other processes from acquiring any
-  additional locks that would interfere with a future write.
-- **Use Case**: When a process begins preparing to make changes but hasn't started the write yet, like in the preparation
-  phase of a transaction.
+The locking mechanism progresses through **five states**, allowing the database to handle **concurrent readers** while
+ensuring that no partial transactions are written or read.
 
-### 4. Pending Lock
+1. **Unlocked**:
 
-- **Description**: The "Pending Lock" is a transitional state. A process that wants to write must first acquire a pending
-  lock before transitioning to an exclusive lock. During this phase, no new shared locks can be granted, but processes
-  that already hold shared locks can continue to read.
-- **Use Case**: This state occurs when a process is about to perform a write but must wait until all current readers finish.
+    - **Description**: In the "Unlocked" state, no locks are held on the database. Multiple processes can read from or
+      write
+      to the database, assuming no other locks have been placed. This is the default state when no transaction is
+      active.
+    - **Use Case**: When the database is idle or no transactions are currently taking place.
 
-### 5. Exclusive Lock
+2. **Shared Lock**:
 
-- **Description**: An "Exclusive Lock" grants a single process full access to the database for writing. In this state,
-  no other process can read or write until the lock is released. This ensures that the changes made during the write
-  operation are atomic and consistent.
-- **Use Case**: When a process is actively writing to the database, it holds an exclusive lock to ensure no interference
-  from other processes.
+    - **Description**: A "Shared Lock" allows multiple processes to read from the database at the same time, but none of
+      them
+      can write. This lock ensures that no changes are made to the database while data is being read.
+    - **Use Case**: When a process starts a read operation, it acquires a shared lock to prevent writes during the read
+      operation, ensuring consistency.
 
-These locking stages are critical for ensuring data consistency and integrity in SQLite's concurrent read-write operations,
-especially in multiprocess environments.
+3. **Reserved Lock**:
+
+    - **Description**: The "Reserved Lock" indicates that a process intends to write to the database but has not yet
+      begun
+      the write operation. This lock allows the process to continue reading but prevents other processes from acquiring
+      any
+      additional locks that would interfere with a future write.
+    - **Use Case**: When a process begins preparing to make changes but hasn't started the write yet, like in the
+      preparation
+      phase of a transaction.
+
+4. **Pending Lock**:
+
+    - **Description**: The "Pending Lock" is a transitional state. A process that wants to write must first acquire a
+      pending
+      lock before transitioning to an exclusive lock. During this phase, no new shared locks can be granted, but
+      processes
+      that already hold shared locks can continue to read.
+    - **Use Case**: This state occurs when a process is about to perform a write but must wait until all current readers
+      finish.
+
+5. **Exclusive Lock**:
+
+    - **Description**: An "Exclusive Lock" grants a single process full access to the database for writing. In this
+      state,
+      no other process can read or write until the lock is released. This ensures that the changes made during the write
+      operation are atomic and consistent.
+    - **Use Case**: When a process is actively writing to the database, it holds an exclusive lock to ensure no
+      interference
+      from other processes.
+
+#### Summary:
+
+- SQLite’s locking mechanism is designed to minimize delays and ensure consistency during concurrent reads and writes.
+- The process of moving through lock states happens very quickly (within milliseconds) and typically does not introduce noticeable performance issues.
+- Understanding the locking states is essential for tuning SQLite, but don’t worry about memorizing all the details—this is mainly background for configuring performance-related settings.
+
+---
 
 ## Journal Modes
 
@@ -62,7 +98,8 @@ This checkpoint is configurable and helps maintain database integrity while impr
 blocked by writers. Readers can see the database up to the last transaction they are aware of, even if new transactions
 are being written.
 
-Overall, WAL Mode offers faster writes, higher concurrency, and is the recommended setting for performance in SQLite databases.
+Overall, WAL Mode offers faster writes, higher concurrency, and is the recommended setting for performance in SQLite
+databases.
 
 ### 2. Rollback Mode
 
@@ -70,25 +107,31 @@ Rollback Mode in SQLite is one of the journal modes that ensures atomic commits 
 file (often named with a -journal suffix) during transactions. In this mode, when a page of the database is about to be
 modified, the original page is first copied to the journal. Then, the changes are made directly in the database file.
 Once the transaction is successfully committed, the journal becomes irrelevant and can either be deleted, truncated, or
-zero-filled. If the transaction needs to be rolled back, the original page from the journal is copied back into the database,
+zero-filled. If the transaction needs to be rolled back, the original page from the journal is copied back into the
+database,
 restoring the previous state.
 
 A key aspect of Rollback Mode is that it blocks readers during writes since the database file itself is being modified.
-Although Rollback Mode is the default, many modern systems prefer Write-Ahead Logging (WAL) for better performance, which
+Although Rollback Mode is the default, many modern systems prefer Write-Ahead Logging (WAL) for better performance,
+which
 will be discussed in the next video of the course.
+
+---
 
 ## Transaction Modes
 
 ### Deferred Transaction (default):
 
 - No intent to write is declared when the transaction starts.
-- It begins without locking the database immediately, allowing reads, but will attempt to upgrade to a write lock when needed.
+- It begins without locking the database immediately, allowing reads, but will attempt to upgrade to a write lock when
+  needed.
 - If an exclusive lock is already held, the transaction fails instantly without waiting, throwing an SQLite busy error.
 
 ### Immediate Transaction:
 
 - Declares the intent to write from the start, acquiring a reserved lock early on.
-- This gives a grace period (like a 5-second timeout) when trying to upgrade to an exclusive lock. If another transaction
+- This gives a grace period (like a 5-second timeout) when trying to upgrade to an exclusive lock. If another
+  transaction
   holds the exclusive lock, it will wait up to 5 seconds (or whatever the busy timeout is set to) before failing.
 - In Write-Ahead Logging (WAL) mode, Immediate and Exclusive transactions behave the same.
 
@@ -103,23 +146,28 @@ will be discussed in the next video of the course.
   especially if the lock is already held by another process.
 - **Immediate transactions** are recommended for write operations because they provide a buffer period to attempt lock
   acquisition without immediately failing.
-- It’s important for applications to be configured to use Immediate transactions for writes to avoid lock contention errors
+- It’s important for applications to be configured to use Immediate transactions for writes to avoid lock contention
+  errors
   (SQLite busy) and ensure a smoother user experience.
 
 Different frameworks handle these transactions in various ways, so checking how to enable Immediate transactions in your
 specific framework (Rails, Laravel, Django, etc.) is crucial.
 
+---
+
 ## Optimizing and Analyzing Your Database
 
 - **ANALYZE Command**: This command updates the internal statistics (stored in tables like `sqlite_stat1`) that SQLite
-  uses for query planning. Running `ANALYZE` after significant changes to the schema or data ensures SQLite has up-to-date
+  uses for query planning. Running `ANALYZE` after significant changes to the schema or data ensures SQLite has
+  up-to-date
   information for optimization.
 
 - **PRAGMA OPTIMIZE**: This command automates the process of running `ANALYZE` and other optimizations, only analyzing
   tables and indexes that need it. You can pass a flag to see what the command will do before executing it. This makes
   it a more efficient option than running `ANALYZE` manually.
 
-- **PRAGMA Analysis Limit**: By setting a limit (from 1 to 1000, or 0 for unlimited), you control how much of the database
+- **PRAGMA Analysis Limit**: By setting a limit (from 1 to 1000, or 0 for unlimited), you control how much of the
+  database
   is analyzed. A recommended setting is 400, balancing performance with thoroughness.
 
 ## Suggested Pragma Statements
@@ -135,13 +183,16 @@ specific framework (Rails, Laravel, Django, etc.) is crucial.
 
 1. **Setting `PRAGMA synchronous` to OFF**:
 
-   - This approach turns off SQLite’s default synchronization behavior, which ensures data integrity in case of a crash
-     or power outage. Setting `PRAGMA synchronous = OFF` increases insertion speed because SQLite skips the process of
-     syncing data to disk after every transaction. However, it introduces some risk: in the event of a system failure,
-     you might lose recent changes or corrupt the database.
+    - This approach turns off SQLite’s default synchronization behavior, which ensures data integrity in case of a crash
+      or power outage. Setting `PRAGMA synchronous = OFF` increases insertion speed because SQLite skips the process of
+      syncing data to disk after every transaction. However, it introduces some risk: in the event of a system failure,
+      you might lose recent changes or corrupt the database.
 
 2. **Batching Inserts into Transactions**:
-   - Instead of performing each insert operation within its own transaction (which involves multiple commit operations),
-     grouping multiple inserts into a single transaction speeds up the process. By batching, say, 500 or 1000 inserts at
-     a time within one transaction, you reduce the overhead of committing after each insert. This method can dramatically
-     improve performance, especially on slower drives like HDDs compared to SSDs.
+    - Instead of performing each insert operation within its own transaction (which involves multiple commit
+      operations),
+      grouping multiple inserts into a single transaction speeds up the process. By batching, say, 500 or 1000 inserts
+      at
+      a time within one transaction, you reduce the overhead of committing after each insert. This method can
+      dramatically
+      improve performance, especially on slower drives like HDDs compared to SSDs.
