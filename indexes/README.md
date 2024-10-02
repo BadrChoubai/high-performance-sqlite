@@ -49,7 +49,6 @@ For the query `SELECT * FROM cities WHERE name = 'lyons'`, the tree is traversed
 how a traversal might look, given the simplified B-tree structure previously defined:
 
 1. **Start at the root:**
-2. 
    - Compare "lyons" with "aurora"
       - "lyons" is greater than "aurora"
       - Move to the right child (boulder and denver)
