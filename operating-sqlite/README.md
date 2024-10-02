@@ -1,3 +1,7 @@
+[Next Chapter](../advanced-json/README.md)
+
+---
+
 # Operating SQLite
 
 ## Altering Schema

@@ -1,3 +1,7 @@
+[Next Chapter](../operating-sqlite/README.md)
+
+---
+
 # Advanced SQL
 
 ## The `EXPLAIN` and `EXPLAIN QUERY PLAN` SQL Commands

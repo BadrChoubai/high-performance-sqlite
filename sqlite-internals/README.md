@@ -1,3 +1,7 @@
+[Next Chapter](../schema/README.md)
+
+---
+
 # SQLite Internals
 
 ![internals diagram](../docs/assets/sqlite-internals-diagram.png)

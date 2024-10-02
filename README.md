@@ -1,3 +1,7 @@
+[Next Chapter](./sqlite-internals/README.md)
+
+---
+ 
 # High Performance SQLite Course Notes
 
 This project contains source code, artifacts, and written notes created while learning the foundations of SQL and

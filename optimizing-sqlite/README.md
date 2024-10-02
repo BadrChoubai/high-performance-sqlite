@@ -1,3 +1,7 @@
+[Next Chapter](../indexes/README.md)
+
+---
+
 # Optimizing SQLite
 
 ## Locking

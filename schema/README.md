@@ -1,3 +1,7 @@
+[Next Chapter](../optimizing-sqlite/README.md)
+
+---
+
 # SQLite Schemas
 
 This part of the course goes over a lot of what to know about working with data and

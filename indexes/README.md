@@ -1,3 +1,7 @@
+[Next Chapter](../advanced-sql/README.md)
+
+---
+
 # Indexes
 
 1. **Indexes as a Secondary Data Structure**: When you create an index, it forms a secondary data structure. It keeps a

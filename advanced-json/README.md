@@ -1,3 +1,7 @@
+[Next Chapter](../README.md)
+
+---
+
 # Advanced JSON
 
 In this chapter, we'll dive into advanced concepts of one of the most widely used data interchange formats: JSON. JSON
