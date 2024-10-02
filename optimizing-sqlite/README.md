@@ -170,7 +170,7 @@ specific framework (Rails, Laravel, Django, etc.) is crucial.
   database
   is analyzed. A recommended setting is 400, balancing performance with thoroughness.
 
-## Suggested Pragma Statements
+### Suggested Pragma Statements
 
 1. `PRAGMA journal_mode = WAL;`
 2. `PRAGMA busy_timeout = 5000;`
