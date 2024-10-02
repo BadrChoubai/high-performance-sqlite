@@ -7,7 +7,7 @@ fine! However, in this chapter, we're going to take a close look at JSON, partic
 SQLite.
 
 While storing JSON in databases is common, it's important to consider how you're using it. If your JSON objects have
-well-defined schemas and you're frequently querying or updating them, it might be more efficient to break those values
+well-defined schemas, and you're frequently querying or updating them, it might be more efficient to break those values
 into top-level columns in your database. Although databases like SQLite support JSON, using native columns for querying
 and indexing is often a better choice for performance and ease of use.
 
@@ -24,12 +24,18 @@ powerful toolkit to process and manipulate JSON within your database.
 
 - [Argument Types](./Argument-Types.md)
 - [JSON Functions](./JSON-Functions.md)
+    - [Validating JSON](./JSON-Functions.md#validating-json-with-json_valid)
+    - [JSON Extraction](./JSON-Functions.md#json-extraction-functions)
+    - [Updating JSON](./JSON-Functions.md#updating-json)
+    - [JSON Aggregation](./JSON-Functions.md#json-aggregation-functions)
+    - [JSON Table Functions](./JSON-Functions.md#json-table-functions)
 
 **Sections**:
 
 - [JSON vs. JSONB](#json-vs-jsonb-in-sqlite-key-differences)
 - [Valid JSON](#valid-json)
-- [Creating JSON Objects + Arrays](#creating-json-objects--arrays)
+- [Creating JSON Objects + Arrays](#creating-and-inspecting-json-objects--arrays)
+- [Indexing JSON](#indexing-json)
 
 ---
 
@@ -101,6 +107,9 @@ powerful toolkit to process and manipulate JSON within your database.
 
 ## Valid JSON
 
+**Supporting Chapter**:
+- [JSON Functions: Validating JSON](./JSON-Functions.md#validating-json-with-json_valid)
+
 - SQLite provides several JSON-related functions, including `json`, `jsonb`, and `json_valid`, which work with **valid
   JSON** and **JSON5** formats.
 - **JSON5** is a human-friendly version of JSON that allows for comments, unquoted keys, extra whitespace, and more.
@@ -124,62 +133,7 @@ powerful toolkit to process and manipulate JSON within your database.
   -- [1] [SQLITE_ERROR] SQL error or missing database (malformed JSON)
   ```
 
-### Validating JSON with `json_valid`
-
-- **`json_valid` Function**:
-    - Used to check if the input is valid JSON before processing it further.
-    - **Returns 1 (valid) or 0 (invalid)**.
-    - Can validate both JSON and JSON5 inputs.
-    - **Default Behavior**: If no second parameter is provided, it defaults to **Bit 1** (strict JSON validation).
-
-- **Bit Flags in `json_valid`**:
-    - You can pass a second parameter (bit flags) to fine-tune the validation process:
-        1. **Bit 1 (Strict JSON Validation)**: Validates against **strict RFC 8259** JSON (standard JSON).
-        2. **Bit 2 (JSON5 Validation)**: Validates **JSON5** inputs, allowing its flexible features like comments and
-           unquoted keys.
-        3. **Bit 3 (Blob Validation)**: Validates if the input is a **JSON-B blob** but does not perform deep
-           validation.
-        4. **Bit 4 (Strict Blob Validation)**: Validates if the input strictly conforms to the JSON-B standard.
-    - **Default Behavior**: If no second parameter is provided, it defaults to **Bit 1** (strict JSON validation).
-
-### Combining Bit Flags in `json_valid`
-
-- The bit flags can be **combined** to check multiple formats at once by summing their values.
-    - **Example: Bit 2 (JSON5) + Bit 3 (JSON-B)**:
-      ```sql
-      SELECT json_valid(input, 6);  -- Validates JSON5 and JSON-B
-      ```
-- **Common Bit Flag Combinations**:
-    - **Bit 2 + Bit 3 (Value 6)**: Validates both **JSON5 as text** and **JSON-B blobs**.
-    - **Bit 2 + Bit 4 (Value 10)**: Validates **strict JSON5** and **strict JSON-B blobs**.
-
-#### Summary:
-
-- SQLite provides robust support for handling JSON and JSON5 formats through its `json`, `jsonb`, and `json_valid`
-  functions.
-- **Performance Optimization**: Use JSON-B for faster operations and storage efficiency.
-- **Validation Options**: `json_valid` offers flexibility in checking different JSON formats, ensuring your data is
-  properly formatted before using it in SQLite.
-
-**Best Practices:**
-
-- **Use `json_valid`** to validate JSON inputs, especially if you're not certain about their format.
-- **Leverage JSON-B** for performance improvements in scenarios where you need to store and query large amounts of JSON
-  data.
-- **Combine bit flags** in `json_valid` based on your use case:
-    - Use **Bit 2 + Bit 3 (Value 6)** for most scenarios, as it covers **both JSON5 and JSON-B validation**.
-
-**JSON-B Performance Advantages**:
-
-- **JSON-B (Binary Representation)**:
-    - Storing and querying JSON as binary (using `jsonb`) improves performance:
-        - Faster queries: Avoids parsing JSON repeatedly.
-        - Smaller storage footprint: Compressed binary format.
-    - Ideal for scenarios where JSON is read frequently but not edited.
-
----
-
-## Creating JSON Objects + Arrays
+## Creating and Inspecting JSON Objects + Arrays
 
 SQLite provides multiple ways to **create JSON objects** and **arrays**. The most basic method is to pass values into
 the `json` function.
@@ -213,11 +167,14 @@ SELECT json('
       -- Returns: '[1, 2, 3]'
       ```
 
-> **JSON-B Variants**:
->- Similar to `json` and `json_array`, you can use the **binary** versions for faster storage and retrieval:
->  - `jsonb()`: Returns a binary representation of JSON text.
->  - `jsonb_array()`: Returns a binary representation of a JSON array.
->  - `jsonb_object()`: Returns a binary representation of a JSON object.
+---
+
+> ### JSONB Variants:
+> 
+>   - Similar to `json` and `json_array`, you can use the **binary** versions for faster storage and retrieval:
+>     - `jsonb()`: Returns a binary representation of JSON text.
+>     - `jsonb_array()`: Returns a binary representation of a JSON array.
+>     - `jsonb_object()`: Returns a binary representation of a JSON object.
 >  
 > These binary representations are faster to use when working with large datasets.
 
@@ -246,5 +203,103 @@ SELECT json('
 - **Array Inspection**: Use `json_array_length` to find out the size of arrays, even when embedded in objects.
 - **Binary vs. Text**: For better performance, use `jsonb`, `jsonb_array`, and `jsonb_object` when handling JSON data
   frequently.
+
+---
+
+## Indexing JSON
+
+**In SQLite**, there are two methods which may used to index JSON data: 
+1. **[Generated Column with an Index](#generated-column-with-an-index)**
+2. **[Functional Index](#functional-index)**
+
+### Generated Column with an Index
+
+**Purpose**: This method creates a new, derived column from the JSON blob and indexes it. The generated column can be
+accessed as a top-level column and makes queries more readable.
+
+- **Steps**:
+    1. **Create a Generated Column**: This column is derived from the JSON data using `json_extract()`, but it’s not
+       physically stored in the database (declared as `VIRTUAL`).
+       ```sql
+       ALTER TABLE users ADD COLUMN name 
+       GENERATED ALWAYS AS (json_extract(data, '$.name')) VIRTUAL;
+       ```
+    2. **Create an Index on the Generated Column**: Once the generated column is in place, we can add a traditional
+       index to it:
+       ```sql
+       CREATE INDEX idx_name ON users (name);
+       ```
+    3. **Querying**: Now you can query the indexed JSON data just as you would with any normal column:
+       ```sql
+       SELECT * FROM users WHERE name = 'Alice';
+       ```
+
+- **Advantages**:
+    - The derived column is available at the top level of the table, making it easier to query.
+    - You can hide the complexity of the JSON blob behind the generated column.
+    - Useful if the application or users frequently query the same key (e.g., `name` in this example).
+
+- **Drawbacks**:
+    - You store the same data in three places: the original JSON blob, the generated column (though virtual), and the
+      index.
+
+### Functional Index
+
+**Purpose**: This method skips the generated column and directly indexes the result of the `json_extract()` function.
+The JSON key is indexed, but you have to reference the extraction function in queries.
+
+- **Steps**:
+    1. **Create a Functional Index**: Directly index the JSON extraction without creating an additional column:
+       ```sql
+       CREATE INDEX idx_age ON users (json_extract(data, '$.age'));
+       ```
+    2. **Querying**: Since the index is built on the `json_extract()` function, you must use the same function in your
+       query:
+       ```sql
+       SELECT * FROM users WHERE json_extract(data, '$.age') = 30;
+       ```
+
+- **Advantages**:
+    - Skips the middle step of generating a column.
+    - Reduces the clutter of additional columns in the database schema.
+    - Saves space by not duplicating data across multiple columns.
+
+- **Drawbacks**:
+    - You must remember to use the `json_extract()` function when querying, which can make queries more cumbersome and
+      harder to read.
+    - The function-based query has to exactly match the indexed expression for SQLite to use the index.
+
+
+### Summary
+
+SQLite offers two primary ways to index JSON data:
+
+1. **Generated Column with Index**: Great for making a part of the JSON easily accessible and queryable as a top-level
+   column.
+2. **Functional Index**: Efficient when you want to skip creating a new column and only need to optimize query
+   performance for specific JSON keys.
+
+Both methods work well depending on the use case, and it's essential to understand the trade-offs in terms of query
+complexity, storage overhead, and application needs.
+
+#### Differences Between the Two Methods
+
+| Aspect                | Generated Column with Index                                             | Functional Index                                                      |
+|-----------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------|
+| **Column Visibility** | The derived column is accessible as a top-level column.                 | There’s no new column; only the function is indexed.                  |
+| **Query Simplicity**  | Easier to query, as the column name can be directly used.               | Queries must include the `json_extract()` function.                   |
+| **Storage Overhead**  | Slightly higher storage overhead (data stored in index).                | Less storage overhead, no additional column.                          |
+| **Application Use**   | Useful if the application needs to interact with the column frequently. | Ideal when you don't need a top-level column, just index performance. |
+
+
+#### Important Considerations:
+
+- **Access Patterns**: Ensure your queries match the indexed expression. SQLite requires precise matches for the query
+  to use the index.
+- **Explain Query Plan**: Always check your queries using `EXPLAIN QUERY PLAN` to verify that the index is being used:
+  ```sql
+  EXPLAIN QUERY PLAN SELECT * FROM users WHERE name = 'Alice';
+  ```
+  If the query doesn't match the indexed expression exactly, SQLite may not use the index.
 
 ---
