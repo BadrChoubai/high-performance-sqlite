@@ -1,7 +1,7 @@
 [Next Chapter](./sqlite-internals/README.md)
 
 ---
- 
+
 # High Performance SQLite Course Notes
 
 This project contains source code, artifacts, and written notes created while learning the foundations of SQL and
@@ -28,21 +28,21 @@ The course has a downloadable sqlite database to use and run alongside the lesso
     - [Creating and Using Indexes](./indexes/Intro-to-Indexes)
     - [Other Types of Indexes](./indexes/Other-types-of-Indexes.md)
 5. [Advanced SQL](./advanced-sql/README.md)
-   - [Recursive CTEs](./advanced-sql/Recursive-CTEs.md)
-   - [Window Functions](./advanced-sql/Window-Functions.md)
-   - [Row Value Syntax](./advanced-sql/Row-Value-Syntax.md)
-   - [Indexed Sorting](./advanced-sql/Indexed-Sorting.md)
-   - [Upserts](./advanced-sql/Upserts.md)
-   - [Aggregates](./advanced-sql/Aggregates.md)
+    - [Recursive CTEs](./advanced-sql/Recursive-CTEs.md)
+    - [Window Functions](./advanced-sql/Window-Functions.md)
+    - [Row Value Syntax](./advanced-sql/Row-Value-Syntax.md)
+    - [Indexed Sorting](./advanced-sql/Indexed-Sorting.md)
+    - [Upserts](./advanced-sql/Upserts.md)
+    - [Aggregates](./advanced-sql/Aggregates.md)
 6. [Operating SQLite](./operating-sqlite/README.md)
-   - [Altering Schema](./operating-sqlite/Altering-Schema.md)
-   - [Backing up SQLite](./operating-sqlite/Backing-Up-SQLite.md)
-   - [Exporting SQLite](./operating-sqlite/Exporting-SQLite.md)
-   - [How _not_ to Corrupt SQLite](./operating-sqlite/How-to-not-corrupt-SQLite.md)
-   - [Multi-Tenancy](./operating-sqlite/Multi-Tenancy.md)
+    - [Altering Schema](./operating-sqlite/Altering-Schema.md)
+    - [Backing up SQLite](./operating-sqlite/Backing-Up-SQLite.md)
+    - [Exporting SQLite](./operating-sqlite/Exporting-SQLite.md)
+    - [How _not_ to Corrupt SQLite](./operating-sqlite/How-to-not-corrupt-SQLite.md)
+    - [Multi-Tenancy](./operating-sqlite/Multi-Tenancy.md)
 7. [Advanced JSON](./advanced-json/README.md)
-   - [Argument Types](./advanced-json/Argument-Types.md)
-   - [JSON Functions](./advanced-json/JSON-Functions.md)
+    - [Argument Types](./advanced-json/Argument-Types.md)
+    - [JSON Functions](./advanced-json/JSON-Functions.md)
 
 ### Quick Bits
 
