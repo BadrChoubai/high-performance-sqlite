@@ -79,8 +79,7 @@ that stores everything in a single file.
 ### Limitations:
 
 - **Limited concurrency**: Only one write operation can happen at a time, making it less suitable for high-traffic,
-  multi-user
-  applications.
+  multi-user applications.
 - **Not built for large-scale, high-performance systems**: It’s perfect for smaller projects but not for
   enterprise-level applications that require robust transaction handling and scalability.
 
