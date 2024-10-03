@@ -451,12 +451,13 @@ Both implicit and explicit cross joins behave similarly with `json_each`.
 
 ### `json_tree`: Recursive Iterator
 
-- **Purpose**: A **recursive** version of `json_each` that digs into nested structures in JSON. Useful when working with deeply
+- **Purpose**: A **recursive** version of `json_each` that digs into nested structures in JSON. Useful when working with
+  deeply
   nested JSON objects or arrays.
 - **Difference**: While `json_each` is limited to shallow-level iteration (first-level elements only), `json_tree` can
   traverse all levels of a deeply nested structure.
 - **Example**:
- 
+
     ```sql
     SELECT *
     FROM products, json_tree(products.tags);
@@ -469,14 +470,13 @@ Both implicit and explicit cross joins behave similarly with `json_each`.
 | `json_each` | Shallow iterator   | When only first-level elements are needed. |
 | `json_tree` | Recursive iterator | For deeply nested JSON structures.         |
 
-
 #### Practical Application
 
 - Use these table functions to convert JSON data back into a **tabular structure** for SQL querying.
 - Example Use Case: A JSON array of tags stored in a column can be "exploded" into individual rows, allowing for easier
   processing using SQL.
 - **Example**:
- 
+
     ```sql
     SELECT products.id, products.name, json_each.value AS tag
     FROM products, json_each(products.tags);

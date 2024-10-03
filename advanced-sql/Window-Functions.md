@@ -121,7 +121,8 @@ w_user_desc AS (PARTITION BY user_id ORDER BY created_at DESC);
 
 ## Use Case
 
-Say we want to retrieve both the first and last bookmark for each user. Specifically, we aim to determine what their first
+Say we want to retrieve both the first and last bookmark for each user. Specifically, we aim to determine what their
+first
 bookmark is (based on when it was created) and what their last bookmark is. To achieve this, we can use window
 functions.
 
@@ -133,7 +134,8 @@ query.
 ### Refactoring our code
 
 We create a CTE called `ranked` where each row is assigned a `row_number` within its partition (based on `user_id`). The
-`first_value` function is used to capture the earliest bookmark (`id`), and another `first_value` function with an opposite
+`first_value` function is used to capture the earliest bookmark (`id`), and another `first_value` function with an
+opposite
 ordering captures the last bookmark. We define two windows, `w_user_asc` for sorting bookmarks in ascending order by
 `created_at`, and `w_user_desc` for descending order.
 

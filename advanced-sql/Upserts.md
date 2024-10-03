@@ -120,7 +120,7 @@ ORDER BY v NULLS FIRST;
 
 ### Using Upsert for a Counter
 
-Another  use case for upsert is implementing a counter. Instead of checking if a key exists, retrieving the
+Another use case for upsert is implementing a counter. Instead of checking if a key exists, retrieving the
 current value, and then updating it, you can use upsert to increment or decrement a value directly with a single query.
 
 In the below example, we modify the `kv` table so that the values we store are numbers, and we implement a counter that
@@ -194,7 +194,7 @@ over to the database and let it take care of the rest, which simplifies your cod
 
 4. **Flexibility**: Even if you don't use it now, it's a pattern that can easily be adapted for future use cases
    involving other operations (like decrementing counters or tallying events).
- 
+
 --- 
 
 ## Creating the KV Table

@@ -80,12 +80,13 @@ queries.
   ```
 
   | detail                                             |
-    |:---------------------------------------------------|
+        |:---------------------------------------------------|
   | SCAN bookmarks                                     |
   | SEARCH users USING INTEGER PRIMARY KEY \(rowid=?\) |
 
   > The `EXPLAIN QUERY PLAN` output above shows that SQLite scans the `bookmarks` table first and then searches the
   > `users` table using its primary key (indexed by `rowid`).
+
 ### Inner Join Behavior:
 
 - An inner join returns only rows where there is a match in both the left (`users`) and right (`bookmarks`) tables.
@@ -402,7 +403,7 @@ Common Table Expressions (CTEs) are a powerful way to logically and structurally
 improve readability and maintainability, and they might also provide performance benefits.
 
 > Notes on [Recursive CTEs](./Recursive-CTEs.md)
- 
+
 ### Example Query Using `UNION ALL`:
 
 ```sqlite

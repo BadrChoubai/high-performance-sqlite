@@ -5,7 +5,7 @@
 # Optimizing SQLite
 
 A common criticism of SQLite is that it is not ready for production due to its limitation of supporting only **one
-concurrent writer**. 
+concurrent writer**.
 
 Despite this limitation, SQLite can handle **many thousands of reads** and **potentially thousands
 of writes** per second, making it suitable for production use in many applications.
@@ -76,8 +76,10 @@ ensuring that no partial transactions are written or read.
 #### Summary:
 
 - SQLite’s locking mechanism is designed to minimize delays and ensure consistency during concurrent reads and writes.
-- The process of moving through lock states happens very quickly (within milliseconds) and typically does not introduce noticeable performance issues.
-- Understanding the locking states is essential for tuning SQLite, but don’t worry about memorizing all the details—this is mainly background for configuring performance-related settings.
+- The process of moving through lock states happens very quickly (within milliseconds) and typically does not introduce
+  noticeable performance issues.
+- Understanding the locking states is essential for tuning SQLite, but don’t worry about memorizing all the details—this
+  is mainly background for configuring performance-related settings.
 
 ---
 

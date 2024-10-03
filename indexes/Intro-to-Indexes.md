@@ -237,8 +237,8 @@ range condition is encountered, the index cannot be used for subsequent columns.
 ### Optimizing Query Performance with Composite Indexes
 
 > **Common equality conditions should be at the beginning of a composite index**,
-while **range conditions should be at the end**.
- 
+> while **range conditions should be at the end**.
+
 This strategy allows the index to satisfy as many equality conditions
 as possible before encountering a range condition that halts further index usage.
 

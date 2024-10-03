@@ -43,6 +43,11 @@ and run SQL queries against it.
 ```sqlite
 -- Load the csv extension with `.load ./csv`
 
-CREATE VIRTUAL TABLE temp.t1 USING csv(filename="sample.csv", header=true);
-SELECT * FROM t1;
+CREATE VIRTUAL TABLE temp.t1 USING csv
+(
+    filename="sample.csv",
+    header = true
+);
+SELECT *
+FROM t1;
 ```

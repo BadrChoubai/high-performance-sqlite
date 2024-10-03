@@ -3,10 +3,17 @@
 Indexes in SQLite are powerful tools for optimizing queries. Beyond standard indexes, there are several specialized
 types that can be particularly useful:
 
-- **Covering Indexes**: These indexes contain all the columns needed to satisfy a query, allowing SQLite to retrieve results directly from the index without additional table lookups. This can greatly improve performance for specific queries.
-- **Partial Indexes**: These are indexes created on a subset of rows in a table, reducing the index size and enhancing query efficiency, especially for frequently queried subsets like active or premium users. 
-- **Indexes on Expressions**: SQLite allows indexing on the result of expressions or functions applied to columns, such as extracting the domain part of an email. This flexibility optimizes queries that rely on transformed data, like specific parts of JSON objects. 
-- **Duplicate Indexes**: Avoid creating redundant indexes that share the same leftmost prefix, as they consume unnecessary space without adding value. However, there are cases where simpler indexes may be beneficial for sorting purposes.
+- **Covering Indexes**: These indexes contain all the columns needed to satisfy a query, allowing SQLite to retrieve
+  results directly from the index without additional table lookups. This can greatly improve performance for specific
+  queries.
+- **Partial Indexes**: These are indexes created on a subset of rows in a table, reducing the index size and enhancing
+  query efficiency, especially for frequently queried subsets like active or premium users.
+- **Indexes on Expressions**: SQLite allows indexing on the result of expressions or functions applied to columns, such
+  as extracting the domain part of an email. This flexibility optimizes queries that rely on transformed data, like
+  specific parts of JSON objects.
+- **Duplicate Indexes**: Avoid creating redundant indexes that share the same leftmost prefix, as they consume
+  unnecessary space without adding value. However, there are cases where simpler indexes may be beneficial for sorting
+  purposes.
 
 Each of these index types offers unique benefits for optimizing database performance while minimizing overhead.
 
@@ -113,7 +120,8 @@ FROM users
 WHERE is_pro = 0;
 ```
 
-We should have a lot of pro users and a lot of free users. If we were frequently querying the pro members, we could create an index like
+We should have a lot of pro users and a lot of free users. If we were frequently querying the pro members, we could
+create an index like
 this:
 
 ```sqlite
@@ -139,7 +147,8 @@ WHERE email LIKE 'AA%'
 LIMIT 4;
 ```
 
-SQLite uses the idx_idx_pro_emails index for this query. If we were to remove the condition on is_pro, the query would take
+SQLite uses the idx_idx_pro_emails index for this query. If we were to remove the condition on is_pro, the query would
+take
 longer because it would scan the entire table. By using a partial index, queries on pro users are much faster.
 
 One thing to note is that partial indexes only work when the query matches the WHERE condition in the index definition.
@@ -330,7 +339,7 @@ the second index can perform the same role as the first, making the first index 
 > When you have two indexes with the same leftmost prefix, SQLite’s query planner can use either index to run a query
 > based on the leftmost column (in this case, `email`). The index with more columns can still serve queries that only
 > involve `email`. For instance:
-> 
+>
 > ```sqlite
 > SELECT *
 > FROM users
@@ -382,7 +391,8 @@ ORDER BY id DESC;
 ```
 
 If the index includes `id` implicitly (as is the case with a single-column index on `email`), it can be used both for
-filtering by `email` and for sorting by `id`. However, if you are using the `idx_email_is_pro_index`, the `is_pro` column
+filtering by `email` and for sorting by `id`. However, if you are using the `idx_email_is_pro_index`, the `is_pro`
+column
 gets in the way, and SQLite can’t use the implicit `id` for sorting. This forces SQLite to create a temporary B-tree for
 the sorting operation, which is slower:
 

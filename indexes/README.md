@@ -40,7 +40,8 @@ Running `playground_up.sql` inside of Datagrip should create a table which would
    nodes,
    while leaf nodes contain keys and hold the actual data.
 2. **Keys**: The keys stored in the nodes are kept in sorted order and act as separators to guide search operations.
-3. **Child Pointers**: Each internal node has pointers to child nodes, with the number of child pointers always being one
+3. **Child Pointers**: Each internal node has pointers to child nodes, with the number of child pointers always being
+   one
    more than the number of keys, facilitating traversal through the tree.
 
 ### Traversing The Tree
@@ -49,31 +50,31 @@ For the query `SELECT * FROM cities WHERE name = 'lyons'`, the tree is traversed
 how a traversal might look, given the simplified B-tree structure previously defined:
 
 1. **Start at the root:**
-   - Compare "lyons" with "aurora"
-      - "lyons" is greater than "aurora"
-      - Move to the right child (boulder and denver)
+    - Compare "lyons" with "aurora"
+        - "lyons" is greater than "aurora"
+        - Move to the right child (boulder and denver)
 
 2. **Next node (Boulder):**
 
-   - Compare "lyons" with "boulder"
-      - "Lyons" is greater than "boulder"
-      - move to the right child (denver)
+    - Compare "lyons" with "boulder"
+        - "Lyons" is greater than "boulder"
+        - move to the right child (denver)
 
 3. **Next node (Denver):**
 
-   - Compare "lyons" with "denver"
-      - "lyons" is greater than "denver"
-      - move to the right child (hudson and lyons)
+    - Compare "lyons" with "denver"
+        - "lyons" is greater than "denver"
+        - move to the right child (hudson and lyons)
 
 4. **Next node (Hudson):**
 
-   - Compare "lyons" with "hudson"
-      - "lyons" is greater than "hudson"
-      - move to the right child (lyons)
+    - Compare "lyons" with "hudson"
+        - "lyons" is greater than "hudson"
+        - move to the right child (lyons)
 
 5. **Next node (Lyons):**
-   - Compare "lyons" with "lyons"
-   - Found "lyons"!
+    - Compare "lyons" with "lyons"
+    - Found "lyons"!
 
 ## Primary, Secondary, and Clustered Indexes
 
@@ -106,18 +107,19 @@ how a traversal might look, given the simplified B-tree structure previously def
 
 2. **Flexibility and Responsibility**: Without the hidden row ID, you're free to choose how your data is clustered using
    the primary key, but this requires careful consideration. For example, choosing a random UUID as the primary key
-   could lead to performance issues, as inserting new rows could frequently break and re-balance the B-tree structure due
+   could lead to performance issues, as inserting new rows could frequently break and re-balance the B-tree structure
+   due
    to the randomness of the key values. On the other hand, using a sequential primary key, like an auto-incrementing
    integer, avoids such issues.
 
 3. **Performance Tradeoffs**:
 
-   - **Insert Penalty**: Using a random key as a primary key in a WITHOUT ROWID table can result in an insert penalty.
-     The B-tree may need to re-balance often, which can slow down insertions.
-   - **Read Benefit**: Without the row ID, a significant benefit is that you avoid the second lookup. With regular row
-     ID tables, if the primary key is not an alias for the row ID, two lookups are necessary—one for the primary key,
-     and another for the row ID in the clustered index. In WITHOUT ROWID tables, querying by the primary key provides
-     direct access to the row data, potentially improving read performance.
+    - **Insert Penalty**: Using a random key as a primary key in a WITHOUT ROWID table can result in an insert penalty.
+      The B-tree may need to re-balance often, which can slow down insertions.
+    - **Read Benefit**: Without the row ID, a significant benefit is that you avoid the second lookup. With regular row
+      ID tables, if the primary key is not an alias for the row ID, two lookups are necessary—one for the primary key,
+      and another for the row ID in the clustered index. In WITHOUT ROWID tables, querying by the primary key provides
+      direct access to the row data, potentially improving read performance.
 
 4. **Example Scenario**: In a key-value store where the key is the primary key, a WITHOUT ROWID table would arrange the
    data on disk based on the key. The tradeoff to consider is whether the faster reads (due to skipping the second

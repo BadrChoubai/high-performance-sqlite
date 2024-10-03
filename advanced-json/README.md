@@ -112,6 +112,7 @@ powerful toolkit to process and manipulate JSON within your database.
 ## Valid JSON
 
 **Supporting Chapter**:
+
 - [JSON Functions: Validating JSON](./JSON-Functions.md#validating-json-with-json_valid)
 
 - SQLite provides several JSON-related functions, including `json`, `jsonb`, and `json_valid`, which work with **valid
@@ -174,12 +175,15 @@ SELECT json('
 ---
 
 > ### JSONB Variants:
-> 
+>
 >   - Similar to `json` and `json_array`, you can use the **binary** versions for faster storage and retrieval:
->     - `jsonb()`: Returns a binary representation of JSON text.
+      >
+
+- `jsonb()`: Returns a binary representation of JSON text.
+
 >     - `jsonb_array()`: Returns a binary representation of a JSON array.
 >     - `jsonb_object()`: Returns a binary representation of a JSON object.
->  
+>
 > These binary representations are faster to use when working with large datasets.
 
 ### Inspecting Arrays
@@ -212,7 +216,8 @@ SELECT json('
 
 ## Indexing JSON
 
-**In SQLite**, there are two methods which may used to index JSON data: 
+**In SQLite**, there are two methods which may used to index JSON data:
+
 1. **[Generated Column with an Index](#generated-column-with-an-index)**
 2. **[Functional Index](#functional-index)**
 
@@ -273,7 +278,6 @@ The JSON key is indexed, but you have to reference the extraction function in qu
       harder to read.
     - The function-based query has to exactly match the indexed expression for SQLite to use the index.
 
-
 ### Summary
 
 SQLite offers two primary ways to index JSON data:
@@ -294,7 +298,6 @@ complexity, storage overhead, and application needs.
 | **Query Simplicity**  | Easier to query, as the column name can be directly used.               | Queries must include the `json_extract()` function.                   |
 | **Storage Overhead**  | Slightly higher storage overhead (data stored in index).                | Less storage overhead, no additional column.                          |
 | **Application Use**   | Useful if the application needs to interact with the column frequently. | Ideal when you don't need a top-level column, just index performance. |
-
 
 #### Important Considerations:
 
